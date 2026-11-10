@@ -2,7 +2,7 @@
    전국 여행지 추천 & 나만의 카톡 보물지도첩 — 핵심 동작 스크립트 (app.js)
    - Kakao Developers (https://developers.kakao.com/) 카카오맵 & 카톡 공유 연동
    - Kakao PlayMCP (https://playmcp.kakao.com/mcp/3) 장소 검색 도구 연동
-   - 전국 팔도 8대 테마 · 45곳 추천 여행 명소 기본 수록
+   - 전국 팔도 8대 테마 · 45곳 + 지역별 실존 명소/맛집 스마트 검색 엔진
    ========================================================================== */
 
 const DEFAULT_KAKAO_JS_KEY = '2cc751d0de6a0e97b90181755f74c071';
@@ -15,7 +15,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'fl-1',
-        name: '서울식물원 (마곡 호수공원 & 온실)',
+        name: '서울식물원',
+        kakaoQuery: '서울식물원',
         region: '서울 강서구',
         category: '🌸 꽃길·수목원',
         address: '서울특별시 강서구 마곡동로 161',
@@ -29,6 +30,7 @@ const TRAVEL_THEMES = {
       {
         id: 'fl-2',
         name: '경기도 물향기수목원',
+        kakaoQuery: '물향기수목원',
         region: '경기 오산시',
         category: '🌸 꽃길·수목원',
         address: '경기도 오산시 청학로 211',
@@ -42,6 +44,7 @@ const TRAVEL_THEMES = {
       {
         id: 'fl-3',
         name: '가평 아침고요수목원',
+        kakaoQuery: '아침고요수목원',
         region: '경기 가평군',
         category: '🌸 꽃길·수목원',
         address: '경기도 가평군 상면 수목원로 432',
@@ -54,12 +57,13 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'fl-4',
-        name: '태안 천리포수목원 (바다 보이는 정원)',
+        name: '태안 천리포수목원',
+        kakaoQuery: '천리포수목원',
         region: '충남 태안군',
         category: '🌸 꽃길·수목원',
         address: '충청남도 태안군 소원면 천리포1길 187',
         desc: '서해 바다 바로 옆에 자리한 아름다운 수목원으로, 파도 소리를 들으며 해안 데크 숲길을 걸을 수 있습니다.',
-        seniorTip: '💡 계단이 없는 평탄한 해안 산책 데크길(무장애 나눔길)이 바다를 따라 이어져 풍경이 일품입니다.',
+        seniorTip: '💡 계단이 없는 평탄한 해안 산책 데크길이 바다를 따라 이어져 풍경이 일품입니다.',
         lat: 36.7989,
         lng: 126.1489,
         mapX: 21,
@@ -67,7 +71,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'fl-5',
-        name: '대구 수목원 (계절꽃 & 선인장 온실)',
+        name: '대구 수목원',
+        kakaoQuery: '대구수목원',
         region: '대구 달서구',
         category: '🌸 꽃길·수목원',
         address: '대구광역시 달서구 화암로 342',
@@ -81,6 +86,7 @@ const TRAVEL_THEMES = {
       {
         id: 'fl-6',
         name: '순천만 국가정원',
+        kakaoQuery: '순천만국가정원',
         region: '전남 순천시',
         category: '🌸 꽃길·수목원',
         address: '전라남도 순천시 국가정원1호길 47',
@@ -98,7 +104,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'sea-1',
-        name: '강릉 경포호수 둘레길 & 소나무숲',
+        name: '강릉 경포호수 & 경포해변 솔밭길',
+        kakaoQuery: '강릉 경포호',
         region: '강원 강릉시',
         category: '🌊 바다·호수길',
         address: '강원특별자치도 강릉시 저동 94',
@@ -111,10 +118,11 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sea-2',
-        name: '부산 해운대 블루라인파크 (해변열차)',
+        name: '부산 해운대 블루라인파크 해변열차',
+        kakaoQuery: '해운대블루라인파크 미포정거장',
         region: '부산 해운대구',
         category: '🌊 바다·호수길',
-        address: '부산광역시 해운대구 청사포로 116',
+        address: '부산광역시 해운대구 달맞이길62번길 13',
         desc: '미포에서 송정까지 푸른 동해 바다 바로 옆을 달리는 해변열차·스카이캡슐과 해안 데크 산책로입니다.',
         seniorTip: '💡 해변열차 통유리 창문으로 청사포와 해운대 절경을 감상할 수 있어 부산 여행 필수 코스입니다.',
         lat: 35.1587,
@@ -124,7 +132,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sea-3',
-        name: '예산 예당호 출렁다리 & 느린호수길',
+        name: '예산 예당호 출렁다리 & 모노레일',
+        kakaoQuery: '예당호출렁다리',
         region: '충남 예산군',
         category: '🌊 바다·호수길',
         address: '충청남도 예산군 응봉면 후사리 39',
@@ -137,7 +146,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sea-4',
-        name: '포항 호미곶 해맞이광장 & 해안 둘레길',
+        name: '포항 호미곶 해맞이광장',
+        kakaoQuery: '호미곶해맞이광장',
         region: '경북 포항시',
         category: '🌊 바다·호수길',
         address: '경상북도 포항시 남구 호미곶면 해맞이로 136',
@@ -150,7 +160,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sea-5',
-        name: '여수 오동도 동백열차 & 해안 산책로',
+        name: '여수 오동도 & 동백열차',
+        kakaoQuery: '여수 오동도',
         region: '전남 여수시',
         category: '🌊 바다·호수길',
         address: '전라남도 여수시 오동도로 222',
@@ -163,7 +174,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sea-6',
-        name: '춘천 공지천 & 의암호 수변 산책길',
+        name: '춘천 공지천 & 의암호 수변공원',
+        kakaoQuery: '춘천 공지천유원지',
         region: '강원 춘천시',
         category: '🌊 바다·호수길',
         address: '강원특별자치도 춘천시 이디오피아길 25',
@@ -181,7 +193,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'hk-1',
-        name: '전주 한옥마을 & 경기전 대나무숲길',
+        name: '전주 한옥마을 & 경기전',
+        kakaoQuery: '전주한옥마을',
         region: '전북 전주시',
         category: '🍵 한옥·사찰',
         address: '전북특별자치도 전주시 완산구 태조로 44',
@@ -195,11 +208,12 @@ const TRAVEL_THEMES = {
       {
         id: 'hk-2',
         name: '평창 월정사 전나무 숲길',
+        kakaoQuery: '월정사 전나무숲길',
         region: '강원 평창군',
         category: '🍵 한옥·사찰',
         address: '강원특별자치도 평창군 진부면 오대산로 374-8',
         desc: '수백 년 된 아름드리 전나무가 뿜어내는 맑은 공기를 마시며 평탄한 흙길을 걷는 우리나라 대표 힐링 숲길입니다.',
-        seniorTip: '💡 계단이 없는 1km 평지 황톳길로 이루어져 있어 남녀노소 누구나 가장 편안하게 걷는 숲길입니다.',
+        seniorTip: '💡 계단이 없는 1km 평지 황톳길로 이루어져 있어 누구나 가장 편안하게 걷는 숲길입니다.',
         lat: 37.7321,
         lng: 128.5928,
         mapX: 60,
@@ -207,7 +221,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hk-3',
-        name: '경주 대릉원 & 황리단길·교촌 한옥마을',
+        name: '경주 대릉원 & 교촌한옥마을',
+        kakaoQuery: '경주 대릉원',
         region: '경북 경주시',
         category: '🍵 한옥·사찰',
         address: '경상북도 경주시 황남동 31-1',
@@ -220,7 +235,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hk-4',
-        name: '안동 하회마을 & 부용대 강변길',
+        name: '안동 하회마을',
+        kakaoQuery: '안동하회마을',
         region: '경북 안동시',
         category: '🍵 한옥·사찰',
         address: '경상북도 안동시 풍천면 전서로 186',
@@ -233,7 +249,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hk-5',
-        name: '합천 해인사 소리길 (계곡 데크 산책로)',
+        name: '합천 해인사 소리길',
+        kakaoQuery: '해인사 소리길',
         region: '경남 합천군',
         category: '🍵 한옥·사찰',
         address: '경상남도 합천군 가야면 해인사길 122',
@@ -246,7 +263,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hk-6',
-        name: '순천 선암사 & 승선교 편백숲길',
+        name: '순천 선암사 & 승선교',
+        kakaoQuery: '순천 선암사',
         region: '전남 순천시',
         category: '🍵 한옥·사찰',
         address: '전라남도 순천시 승주읍 선암사길 450',
@@ -264,11 +282,12 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'mk-1',
-        name: '속초 관광수산시장 & 아바이마을',
+        name: '속초 관광수산시장 (중앙시장)',
+        kakaoQuery: '속초관광수산시장',
         region: '강원 속초시',
         category: '🍲 전통시장·미식',
         address: '강원특별자치도 속초시 중앙로147번길 12',
-        desc: '동해안의 싱싱한 해산물과 닭강정, 오징어순대 등 명물 먹거리를 맛보고 갯배 체험도 할 수 있는 활기찬 시장입니다.',
+        desc: '동해안의 싱싱한 해산물과 닭강정, 오징어순대 등 명물 먹거리를 맛보고 아바이마을 갯배도 체험할 수 있는 활기찬 시장입니다.',
         seniorTip: '💡 대형 공영주차장과 아케이드 지붕이 잘 되어 있어 날씨에 상관없이 편하게 구경할 수 있습니다.',
         lat: 38.2044,
         lng: 128.5901,
@@ -277,7 +296,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'mk-2',
-        name: '단양 구경시장 & 마늘 미식 거리',
+        name: '단양 구경시장',
+        kakaoQuery: '단양구경시장',
         region: '충북 단양군',
         category: '🍲 전통시장·미식',
         address: '충청북도 단양군 단양읍 도전5길 31',
@@ -290,7 +310,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'mk-3',
-        name: '정선 아리랑 5일장 (2·7일 장날)',
+        name: '정선 아리랑시장 (5일장)',
+        kakaoQuery: '정선아리랑시장',
         region: '강원 정선군',
         category: '🍲 전통시장·미식',
         address: '강원특별자치도 정선군 정선읍 봉양7길 39',
@@ -303,7 +324,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'mk-4',
-        name: '서울 광장시장 & 종로 노포 맛집 골목',
+        name: '서울 광장시장 먹자골목',
+        kakaoQuery: '광장시장',
         region: '서울 종로구',
         category: '🍲 전통시장·미식',
         address: '서울특별시 종로구 창경궁로 88',
@@ -316,7 +338,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'mk-5',
-        name: '예산 상설시장 & 장터 광장 먹거리',
+        name: '예산 상설시장',
+        kakaoQuery: '예산시장',
         region: '충남 예산군',
         category: '🍲 전통시장·미식',
         address: '충청남도 예산군 예산읍 형제고개로 967',
@@ -329,14 +352,15 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'mk-6',
-        name: '담양 창평 전통시장 & 국밥·죽녹원 거리',
+        name: '담양 창평전통시장 & 죽녹원 국수거리',
+        kakaoQuery: '담양 죽녹원',
         region: '전남 담양군',
         category: '🍲 전통시장·미식',
-        address: '전라남도 담양군 창평면 창평현로 524',
-        desc: '깊은 국물의 전통 국밥과 담양 떡갈비, 대통밥, 쌀엿을 만날 수 있는 남도 미식 일번지입니다.',
-        seniorTip: '💡 근처 슬로시티 삼지천 돌담길 및 죽녹원 대나무숲과 함께 여유로운 여행 코스로 인기가 많습니다.',
-        lat: 35.2351,
-        lng: 126.9922,
+        address: '전라남도 담양군 담양읍 죽녹원로 119',
+        desc: '깊은 국물의 전통 국밥과 담양 떡갈비, 대통밥, 댓잎 아이스크림을 만날 수 있는 남도 미식 일번지입니다.',
+        seniorTip: '💡 죽녹원 대나무숲과 관방제림 강변 산책로가 바로 옆에 있어 식사 후 산책 코스로 완벽합니다.',
+        lat: 35.3278,
+        lng: 126.9856,
         mapX: 34,
         mapY: 66
       }
@@ -347,7 +371,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'tr-1',
-        name: '춘천 삼악산 호수케이블카 & 의암호 스카이워크',
+        name: '춘천 삼악산 호수케이블카',
+        kakaoQuery: '춘천삼악산호수케이블카',
         region: '강원 춘천시',
         category: '🚂 기차·케이블카',
         address: '강원특별자치도 춘천시 스포츠타운길 245',
@@ -360,7 +385,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'tr-2',
-        name: '양평 두물머리 느티나무 강변길',
+        name: '양평 두물머리 & 세미원',
+        kakaoQuery: '양평 두물머리',
         region: '경기 양평군',
         category: '🚂 기차·케이블카',
         address: '경기도 양평군 양서면 두물머리길 145',
@@ -373,7 +399,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'tr-3',
-        name: '제천 청풍호반 케이블카 & 모노레일',
+        name: '제천 청풍호반 케이블카',
+        kakaoQuery: '청풍호반케이블카',
         region: '충북 제천시',
         category: '🚂 기차·케이블카',
         address: '충청북도 제천시 청풍면 문화재길 166',
@@ -386,7 +413,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'tr-4',
-        name: '곡성 섬진강 기차마을 & 증기기관차',
+        name: '곡성 섬진강 기차마을',
+        kakaoQuery: '섬진강기차마을',
         region: '전남 곡성군',
         category: '🚂 기차·케이블카',
         address: '전라남도 곡성군 오곡면 기차마을로 232',
@@ -399,7 +427,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'tr-5',
-        name: '통영 케이블카 & 디피랑·동피랑 벽화마을',
+        name: '통영 케이블카 & 동피랑 벽화마을',
+        kakaoQuery: '통영케이블카',
         region: '경남 통영시',
         category: '🚂 기차·케이블카',
         address: '경상남도 통영시 발개로 205',
@@ -412,11 +441,12 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'tr-6',
-        name: '목포 근대역사문화공간 & 해상케이블카',
+        name: '목포 해상케이블카 & 고하도 전망대',
+        kakaoQuery: '목포해상케이블카 북항스테이션',
         region: '전남 목포시',
         category: '🚂 기차·케이블카',
-        address: '전라남도 목포시 해안로 249',
-        desc: 'KTX 목포역 인근 근대 건축 거리와 유달산에서 고하도까지 바다 위를 가로지르는 국내 최장 해상케이블카 코스입니다.',
+        address: '전라남도 목포시 해양대학로 240',
+        desc: '유달산에서 고하도까지 다도해 바다 위를 가로지르는 국내 최장 해상케이블카와 해안 데크길 코스입니다.',
         seniorTip: '💡 케이블카를 타고 고하도에 내리면 해안가를 따라 평탄한 해상 데크 산책로가 멋지게 펼쳐집니다.',
         lat: 34.7876,
         lng: 126.3821,
@@ -431,9 +461,10 @@ const TRAVEL_THEMES = {
       {
         id: 'sp-1',
         name: '아산 온양온천 & 곡교천 은행나무길',
+        kakaoQuery: '곡교천은행나무길',
         region: '충남 아산시',
         category: '♨️ 온천·숲속힐링',
-        address: '충청남도 아산시 온천대로 1459',
+        address: '충청남도 아산시 염치읍 백암리 502-3',
         desc: '전철 1호선과 기차로 바로 닿는 역사 깊은 온천 휴양지로, 온천 스파와 아름다운 곡교천 은행나무길 산책을 함께 즐깁니다.',
         seniorTip: '💡 온양온천역 바로 앞 광장에 무료 야외 족욕장이 있어 가볍게 체험하기에도 좋습니다.',
         lat: 36.7812,
@@ -443,7 +474,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sp-2',
-        name: '충주 수안보 온천 & 족욕 체험길',
+        name: '충주 수안보 온천 & 족욕길',
+        kakaoQuery: '수안보족욕길',
         region: '충북 충주시',
         category: '♨️ 온천·숲속힐링',
         address: '충청북도 충주시 수안보면 물탕2길 17',
@@ -456,7 +488,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sp-3',
-        name: '울진 덕구온천 스파월드 & 죽변 해안스카이레일',
+        name: '울진 덕구온천 & 죽변 해안스카이레일',
+        kakaoQuery: '덕구온천리조트스파월드',
         region: '경북 울진군',
         category: '♨️ 온천·숲속힐링',
         address: '경상북도 울진군 북면 덕구온천로 924',
@@ -469,7 +502,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sp-4',
-        name: '장성 축령산 편백나무 치유의 숲',
+        name: '장성 축령산 편백숲 (치유의 숲)',
+        kakaoQuery: '축령산편백숲',
         region: '전남 장성군',
         category: '♨️ 온천·숲속힐링',
         address: '전라남도 장성군 서삼면 모암길 292',
@@ -482,7 +516,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'sp-5',
-        name: '제주 사려니숲길 (붉은오름 데크 산책 코스)',
+        name: '제주 사려니숲길',
+        kakaoQuery: '사려니숲길',
         region: '제주 제주시',
         category: '♨️ 온천·숲속힐링',
         address: '제주특별자치도 제주시 조천읍 교래리 산 137-1',
@@ -500,7 +535,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'is-1',
-        name: '제주 섭지코지 해안 산책로 & 성산일출봉 뷰',
+        name: '제주 섭지코지 & 성산일출봉',
+        kakaoQuery: '섭지코지',
         region: '제주 서귀포시',
         category: '🏝️ 섬·해안비경',
         address: '제주특별자치도 서귀포시 성산읍 고성리',
@@ -513,7 +549,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'is-2',
-        name: '거제 바람의언덕 & 외도 보타니아 유람선',
+        name: '거제 바람의언덕 & 외도 보타니아',
+        kakaoQuery: '거제 바람의언덕',
         region: '경남 거제시',
         category: '🏝️ 섬·해안비경',
         address: '경상남도 거제시 남부면 갈곶리 산14-47',
@@ -527,6 +564,7 @@ const TRAVEL_THEMES = {
       {
         id: 'is-3',
         name: '남해 독일마을 & 물건리 방조어부림',
+        kakaoQuery: '남해독일마을',
         region: '경남 남해군',
         category: '🏝️ 섬·해안비경',
         address: '경상남도 남해군 삼동면 독일로 92',
@@ -539,7 +577,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'is-4',
-        name: '신안 퍼플섬 (반월도 · 박지도 보라색 다리)',
+        name: '신안 퍼플섬 (반월도 · 박지도)',
+        kakaoQuery: '신안 퍼플교',
         region: '전남 신안군',
         category: '🏝️ 섬·해안비경',
         address: '전라남도 신안군 안좌면 소곡두리길 257-35',
@@ -553,6 +592,7 @@ const TRAVEL_THEMES = {
       {
         id: 'is-5',
         name: '울릉도 내수전 일출전망대 & 태하 모노레일',
+        kakaoQuery: '울릉도 내수전일출전망대',
         region: '경북 울릉군',
         category: '🏝️ 섬·해안비경',
         address: '경상북도 울릉군 울릉읍 저동리 산33',
@@ -570,7 +610,8 @@ const TRAVEL_THEMES = {
     places: [
       {
         id: 'hi-1',
-        name: '서울 경복궁 경회루 & 청와대 녹지원 산책',
+        name: '서울 경복궁 & 청와대 산책로',
+        kakaoQuery: '경복궁',
         region: '서울 종로구',
         category: '🏛️ 고궁·역사산책',
         address: '서울특별시 종로구 사직로 161',
@@ -583,7 +624,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hi-2',
-        name: '국립중앙박물관 (사유의 방 & 거울못 산책)',
+        name: '국립중앙박물관 (사유의 방 & 거울못)',
+        kakaoQuery: '국립중앙박물관',
         region: '서울 용산구',
         category: '🏛️ 고궁·역사산책',
         address: '서울특별시 용산구 서빙고로 137',
@@ -596,7 +638,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hi-3',
-        name: '수원 화성 방화수류정 & 화성어차 투어',
+        name: '수원 화성 방화수류정 & 행궁동 카페거리',
+        kakaoQuery: '방화수류정',
         region: '경기 수원시',
         category: '🏛️ 고궁·역사산책',
         address: '경기도 수원시 팔달구 정조로 825',
@@ -609,7 +652,8 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hi-4',
-        name: '부여 궁남지 (백제 왕실 연못 산책길)',
+        name: '부여 궁남지',
+        kakaoQuery: '부여 궁남지',
         region: '충남 부여군',
         category: '🏛️ 고궁·역사산책',
         address: '충청남도 부여군 부여읍 궁남로 52',
@@ -622,10 +666,11 @@ const TRAVEL_THEMES = {
       },
       {
         id: 'hi-5',
-        name: '공주 무령왕릉과 왕릉원 & 공산성 금강뷰',
+        name: '공주 공산성 & 무령왕릉 왕릉원',
+        kakaoQuery: '공산성',
         region: '충남 공주시',
         category: '🏛️ 고궁·역사산책',
-        address: '충청남도 공주시 왕릉로 37',
+        address: '충청남도 공주시 웅진로 280',
         desc: '1500년 백제의 숨결이 살아있는 왕릉원 소나무 숲길과 유유히 흐르는 금강을 내려다보는 역사 나들이 명소입니다.',
         seniorTip: '💡 잘 가꾸어진 잔디와 솔숲 산책로가 아름다우며, 근처 제민천 카페거리와 밤 디저트가 유명합니다.',
         lat: 36.4661,
@@ -637,40 +682,145 @@ const TRAVEL_THEMES = {
   }
 };
 
-// 기본 초기 보물지도첩 데이터 (처음 열었을 때 바로 보이는 대표 명소 3곳)
-const DEFAULT_SAVED_PLACES = [
+// AI 검색용 추가 실존 명소 & 맛집 데이터베이스 (어떤 키워드로 검색해도 실제 명소가 나오도록 구성)
+const EXTRA_FAMOUS_PLACES = [
   {
-    id: 'fl-1',
-    name: '서울식물원 (마곡 호수공원 & 온실)',
-    region: '서울 강서구',
-    category: '⭐ 내 별표 명소',
-    address: '서울특별시 강서구 마곡동로 161',
-    desc: '사계절 푸른 열대·지중해 온실과 넓은 호수공원이 이어져 꽃구경하기 좋은 도심 속 식물원입니다.',
-    seniorTip: '📝 내 메모: 봄에 다녀왔는데 호수 산책로도 넓고 온실 사진이 정말 예쁘게 나왔음!',
-    lat: 37.5693,
-    lng: 126.8351,
-    mapX: 33,
-    mapY: 23
-  },
-  {
-    id: 'hk-2',
-    name: '평창 월정사 전나무 숲길',
-    region: '강원 평창군',
-    category: '⭐ 내 별표 명소',
-    address: '강원특별자치도 평창군 진부면 오대산로 374-8',
-    desc: '수백 년 된 아름드리 전나무가 뿜어내는 맑은 공기를 마시며 평탄한 흙길을 걷는 힐링 숲길입니다.',
-    seniorTip: '📝 내 메모: 가을에 꼭 다시 가보고 싶은 조용하고 공기 좋은 산책길.',
-    lat: 37.7321,
-    lng: 128.5928,
-    mapX: 60,
+    id: 'ex-gn-1',
+    name: '강릉 안목해변 커피거리',
+    kakaoQuery: '강릉 안목해변 커피거리',
+    region: '강원 강릉시',
+    category: '☕ 바다뷰 카페거리',
+    address: '강원특별자치도 강릉시 창해로14번길 20-1',
+    desc: '푸른 동해 바다 바로 앞에 로스터리 카페들이 줄지어 있는 강릉 대표 해변 산책 & 커피 명소입니다.',
+    seniorTip: '💡 해변 백사장 옆으로 평탄한 보도블록 산책로가 이어져 바다를 보며 걷기 좋습니다.',
+    lat: 37.7726,
+    lng: 128.9472,
+    mapX: 67,
     mapY: 22
   },
   {
+    id: 'ex-gn-2',
+    name: '강릉 초당순두부마을',
+    kakaoQuery: '강릉 초당순두부마을',
+    region: '강원 강릉시',
+    category: '🍲 대표 미식거리',
+    address: '강원특별자치도 강릉시 초당순두부길 89',
+    desc: '바닷물로 간수한 고소하고 부드러운 전통 초당순두부와 순두부 젤라또를 맛볼 수 있는 강릉 대표 맛집 거리입니다.',
+    seniorTip: '💡 경포호수와 허균·허난설헌 기념공원 솔숲 바로 옆이라 식사 전후 산책 코스로 완벽합니다.',
+    lat: 37.7911,
+    lng: 128.9145,
+    mapX: 65,
+    mapY: 21
+  },
+  {
+    id: 'ex-jj-1',
+    name: '전주 남부시장 & 한옥마을 전망대 카페거리',
+    kakaoQuery: '전주 남부시장',
+    region: '전북 전주시',
+    category: '🍲 전통시장·카페',
+    address: '전북특별자치도 전주시 완산구 풍남문2길 63',
+    desc: '전주 콩나물국밥, 피순대 등 정통 전주 미식과 한옥 지붕이 한눈에 내려다보이는 루프탑 전통 찻집 거리입니다.',
+    seniorTip: '💡 전주 한옥마을 경기전에서 도보 5분 거리로 이어져 함께 둘러보기 아주 편리합니다.',
+    lat: 35.8122,
+    lng: 127.1476,
+    mapX: 37,
+    mapY: 58
+  },
+  {
+    id: 'ex-jj-2',
+    name: '전주 덕진공원 연꽃 산책로 & 연화정도서관',
+    kakaoQuery: '전주 덕진공원',
+    region: '전북 전주시',
+    category: '🌸 호수·한옥도서관',
+    address: '전북특별자치도 전주시 덕진구 권삼득로 390',
+    desc: '넓은 호수 위를 가로지르는 연화교와 물 위에 떠 있는 아름다운 한옥 도서관(연화정도서관)이 있는 산책 명소입니다.',
+    seniorTip: '💡 호수 위 다리와 도서관 내부가 모두 평지로 연결되어 사진 찍기와 휴식에 최고입니다.',
+    lat: 35.8475,
+    lng: 127.1223,
+    mapX: 35,
+    mapY: 56
+  },
+  {
+    id: 'ex-ys-1',
+    name: '여수 해상케이블카 & 돌산공원 전망대',
+    kakaoQuery: '여수해상케이블카 돌산탑승장',
+    region: '전남 여수시',
+    category: '🌊 바다 전망·야경',
+    address: '전라남도 여수시 돌산읍 돌산로 3600-1',
+    desc: '바다 위를 건너 돌산도와 자산공원을 잇는 해상케이블카로, 여수 밤바다 야경과 다도해 일몰이 아름답습니다.',
+    seniorTip: '💡 오동도 및 이순신광장 먹거리 골목과 가까워 여수 여행 핵심 코스로 꼽힙니다.',
+    lat: 34.7289,
+    lng: 127.7425,
+    mapX: 47,
+    mapY: 74
+  },
+  {
+    id: 'ex-jeju-1',
+    name: '제주 카멜리아힐 & 애월 한담해안산책로',
+    kakaoQuery: '제주 한담해안산책로',
+    region: '제주 제주시',
+    category: '🏝️ 제주 해안·수목원',
+    address: '제주특별자치도 제주시 애월읍 곽지리 1359',
+    desc: '에메랄드빛 애월 바다를 따라 구불구불 이어지는 평탄한 해안 산책로와 오션뷰 카페거리입니다.',
+    seniorTip: '💡 해안 바로 옆을 따라 포장된 보행 전용 산책로라 파도 소리를 들으며 걷기 좋습니다.',
+    lat: 33.4589,
+    lng: 126.3105,
+    mapX: 29,
+    mapY: 92
+  },
+  {
+    id: 'ex-bs-1',
+    name: '부산 광안리 해변 & 해동용궁사',
+    kakaoQuery: '부산 해동용궁사',
+    region: '부산 기장군',
+    category: '🌊 바다 사찰·해변',
+    address: '부산광역시 기장군 기장읍 용궁길 86',
+    desc: '푸른 동해 바다 기암절벽 위에 세워진 아름다운 해안 사찰로, 파도 소리와 함께 탁 트인 바다 전망을 선사합니다.',
+    seniorTip: '💡 해운대 블루라인파크 송정역에서 가까워 해변열차 코스와 함께 둘러보기 좋습니다.',
+    lat: 35.1884,
+    lng: 129.2233,
+    mapX: 74,
+    mapY: 66
+  }
+];
+
+// 기본 초기 보물지도첩 데이터 (처음 열었을 때 바로 보이는 대표 명소 3곳)
+const DEFAULT_SAVED_PLACES = [
+  {
+    id: 'sea-1',
+    name: '강릉 경포호수 & 경포해변 솔밭길',
+    kakaoQuery: '강릉 경포호',
+    region: '강원 강릉시',
+    category: '⭐ 내 별표 명소',
+    address: '강원특별자치도 강릉시 저동 94',
+    desc: '바닷바람과 소나무 향기를 맡으며 호수 둘레를 걷는 평탄한 산책로입니다.',
+    seniorTip: '📝 내 메모: 호수 산책로도 넓고 근처 초당순두부가 정말 맛있었음!',
+    lat: 37.7955,
+    lng: 128.9086,
+    mapX: 66,
+    mapY: 20
+  },
+  {
+    id: 'hk-1',
+    name: '전주 한옥마을 & 경기전',
+    kakaoQuery: '전주한옥마을',
+    region: '전북 전주시',
+    category: '⭐ 내 별표 명소',
+    address: '전북특별자치도 전주시 완산구 태조로 44',
+    desc: '고풍스러운 한옥 골목길과 경기전의 푸른 대나무 숲길을 걸으며 전통 차를 즐길 수 있습니다.',
+    seniorTip: '📝 내 메모: 한옥 골목 야경도 예쁘고 전망대 카페가 참 좋았던 곳.',
+    lat: 35.8147,
+    lng: 127.1526,
+    mapX: 36,
+    mapY: 57
+  },
+  {
     id: 'sea-2',
-    name: '부산 해운대 블루라인파크 (해변열차)',
+    name: '부산 해운대 블루라인파크 해변열차',
+    kakaoQuery: '해운대블루라인파크 미포정거장',
     region: '부산 해운대구',
     category: '⭐ 내 별표 명소',
-    address: '부산광역시 해운대구 청사포로 116',
+    address: '부산광역시 해운대구 달맞이길62번길 13',
     desc: '푸른 동해 바다 바로 옆을 달리는 해변열차와 해안 산책로입니다.',
     seniorTip: '📝 내 메모: 해변열차 타고 바다 구경하기가 너무 좋고 노을 풍경이 최고였음!',
     lat: 35.1587,
@@ -680,42 +830,55 @@ const DEFAULT_SAVED_PLACES = [
   }
 ];
 
-// 지역 이름 -> 대한민국 팔도 지도 좌표 자동 매핑 도우미
+// 지역 이름 -> 대한민국 팔도 지도 좌표 & 실제 위경도 자동 매핑 도우미
 const REGION_COORD_MAP = [
-  { keywords: ['서울', '종로', '강서', '용산', '강남', '마포', '은평'], mapX: 35, mapY: 23 },
-  { keywords: ['인천', '강화', '송도'], mapX: 26, mapY: 24 },
-  { keywords: ['경기', '수원', '오산', '양평', '가평', '파주', '일산', '분당'], mapX: 38, mapY: 26 },
-  { keywords: ['춘천', '홍천', '원주'], mapX: 48, mapY: 21 },
-  { keywords: ['강릉', '속초', '양양', '동해', '삼척', '평창', '정선', '강원'], mapX: 63, mapY: 21 },
-  { keywords: ['태안', '보령', '서산', '당진'], mapX: 21, mapY: 41 },
-  { keywords: ['충남', '예산', '아산', '천안', '공주', '부여', '대전', '세종'], mapX: 35, mapY: 43 },
-  { keywords: ['충북', '청주', '충주', '제천', '단양'], mapX: 50, mapY: 37 },
-  { keywords: ['전북', '전주', '군산', '익산', '남원', '정읍', '부안'], mapX: 36, mapY: 57 },
-  { keywords: ['광주', '담양', '장성', '곡성', '나주'], mapX: 34, mapY: 65 },
-  { keywords: ['목포', '신안', '해남', '진도', '강진', '완도'], mapX: 25, mapY: 73 },
-  { keywords: ['여수', '순천', '광양', '보성', '고흥', '전남'], mapX: 45, mapY: 71 },
-  { keywords: ['경북', '안동', '영주', '문경', '구미'], mapX: 59, mapY: 44 },
-  { keywords: ['경주', '포항', '울진', '영덕'], mapX: 73, mapY: 52 },
-  { keywords: ['대구', '경산', '청도'], mapX: 62, mapY: 57 },
-  { keywords: ['울릉', '독도'], mapX: 86, mapY: 30 },
-  { keywords: ['부산', '해운대', '기장', '울산'], mapX: 72, mapY: 67 },
-  { keywords: ['경남', '통영', '거제', '남해', '합천', '진주', '창원', '김해'], mapX: 57, mapY: 68 },
-  { keywords: ['제주', '서귀포', '성산', '애월', '한라산'], mapX: 33, mapY: 92 }
+  { keywords: ['서울', '종로', '강서', '용산', '강남', '마포', '은평', '잠실', '홍대', '성수'], mapX: 35, mapY: 23, lat: 37.5665, lng: 126.978 },
+  { keywords: ['인천', '강화', '송도', '영종도', '을왕리'], mapX: 26, mapY: 24, lat: 37.4563, lng: 126.7052 },
+  { keywords: ['경기', '수원', '오산', '양평', '가평', '파주', '일산', '분당', '포천', '용인'], mapX: 38, mapY: 26, lat: 37.2827, lng: 127.0135 },
+  { keywords: ['춘천', '홍천', '원주', '인제'], mapX: 48, mapY: 21, lat: 37.8742, lng: 127.7051 },
+  { keywords: ['강릉', '속초', '양양', '동해', '삼척', '평창', '정선', '강원', '고성'], mapX: 63, mapY: 21, lat: 37.7955, lng: 128.9086 },
+  { keywords: ['태안', '보령', '서산', '당진', '안면도', '대천'], mapX: 21, mapY: 41, lat: 36.7989, lng: 126.1489 },
+  { keywords: ['충남', '예산', '아산', '천안', '공주', '부여', '대전', '세종', '논산'], mapX: 35, mapY: 43, lat: 36.4661, lng: 127.1128 },
+  { keywords: ['충북', '청주', '충주', '제천', '단양', '보은'], mapX: 50, mapY: 37, lat: 36.9847, lng: 128.3688 },
+  { keywords: ['전북', '전주', '군산', '익산', '남원', '정읍', '부안', '무주'], mapX: 36, mapY: 57, lat: 35.8147, lng: 127.1526 },
+  { keywords: ['광주', '담양', '장성', '곡성', '나주', '구례'], mapX: 34, mapY: 65, lat: 35.3278, lng: 126.9856 },
+  { keywords: ['목포', '신안', '해남', '진도', '강진', '완도', '영암'], mapX: 25, mapY: 73, lat: 34.7876, lng: 126.3821 },
+  { keywords: ['여수', '순천', '광양', '보성', '고흥', '전남'], mapX: 45, mapY: 71, lat: 34.7456, lng: 127.7669 },
+  { keywords: ['경북', '안동', '영주', '문경', '구미', '상주'], mapX: 59, mapY: 44, lat: 36.5392, lng: 128.5181 },
+  { keywords: ['경주', '포항', '울진', '영덕', '청송'], mapX: 73, mapY: 52, lat: 35.8394, lng: 129.2119 },
+  { keywords: ['대구', '경산', '청도'], mapX: 62, mapY: 57, lat: 35.7997, lng: 128.5227 },
+  { keywords: ['울릉', '독도'], mapX: 86, mapY: 30, lat: 37.5081, lng: 130.9108 },
+  { keywords: ['부산', '해운대', '기장', '광안리', '송정', '울산'], mapX: 72, mapY: 67, lat: 35.1587, lng: 129.1794 },
+  { keywords: ['경남', '통영', '거제', '남해', '합천', '진주', '창원', '김해', '밀양', '하동'], mapX: 57, mapY: 68, lat: 34.8125, lng: 128.4239 },
+  { keywords: ['제주', '서귀포', '성산', '애월', '한라산', '우도', '중문'], mapX: 33, mapY: 92, lat: 33.4242, lng: 126.9311 }
 ];
 
-function inferKoreaMapPosition(text) {
+function inferKoreaMapPosition(text, offsetIndex = 0) {
   const str = String(text || '');
+  // 핀들이 서로 겹치지 않도록 순번(offsetIndex)에 따라 위치를 자연스럽게 분산
+  const offsets = [
+    { dx: 0, dy: 0 },
+    { dx: 5, dy: -4 },
+    { dx: -5, dy: 4 },
+    { dx: 6, dy: 4 }
+  ];
+  const off = offsets[offsetIndex % offsets.length];
+
   for (const item of REGION_COORD_MAP) {
     if (item.keywords.some((kw) => str.includes(kw))) {
       return {
-        mapX: item.mapX + Math.floor(Math.random() * 5 - 2),
-        mapY: item.mapY + Math.floor(Math.random() * 5 - 2)
+        mapX: Math.min(88, Math.max(15, item.mapX + off.dx)),
+        mapY: Math.min(94, Math.max(12, item.mapY + off.dy)),
+        lat: item.lat + offsetIndex * 0.008,
+        lng: item.lng + offsetIndex * 0.008
       };
     }
   }
   return {
-    mapX: Math.floor(34 + Math.random() * 32),
-    mapY: Math.floor(24 + Math.random() * 44)
+    mapX: Math.min(82, Math.max(20, 42 + off.dx * 2)),
+    mapY: Math.min(88, Math.max(18, 45 + off.dy * 2)),
+    lat: 36.5 + offsetIndex * 0.02,
+    lng: 127.8 + offsetIndex * 0.02
   };
 }
 
@@ -777,6 +940,11 @@ function switchTab(tabName) {
 
   if (tabName === 'recommend') {
     selectTravelTheme(currentThemeKey);
+  } else if (tabName === 'search') {
+    if (currentDisplayedPlaces && currentDisplayedPlaces.length > 0) {
+      updateMapPins(currentDisplayedPlaces, '🔍 AI 여행지·맛집 추천 지도');
+      focusPlaceOnMap(currentDisplayedPlaces[0]);
+    }
   } else if (tabName === 'mybook') {
     renderMyBookList();
     if (mySavedPlaces.length > 0) {
@@ -824,7 +992,8 @@ function renderPlaceCards(places, containerId, isMyBook) {
 
   places.forEach((place) => {
     const isSaved = mySavedPlaces.some((item) => item.name === place.name);
-    const kakaoMapRouteUrl = `https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`;
+    const searchTarget = place.kakaoQuery || place.name;
+    const kakaoMapRouteUrl = `https://map.kakao.com/link/search/${encodeURIComponent(searchTarget)}`;
 
     const card = document.createElement('article');
     card.className = 'place-card';
@@ -886,18 +1055,31 @@ function toggleMapMode() {
 function updateMapPins(places, mapHeaderTitle) {
   document.getElementById('currentMapTitle').textContent = mapHeaderTitle;
 
-  // 1) 대한민국 팔도 지도 위에 핀 버튼 배치
+  // 1) 대한민국 팔도 지도 위에 핀 버튼 배치 (인접 핀 겹침 방지 보정 포함)
   const layer = document.getElementById('mapMarkersLayer');
   layer.innerHTML = '';
 
-  places.forEach((place) => {
+  const usedPositions = [];
+  places.forEach((place, idx) => {
+    let px = place.mapX || 45;
+    let py = place.mapY || 45;
+
+    // 이미 같은 좌표 근처에 핀이 있으면 살짝 옆으로 띄워서 두 핀 모두 잘 보이게 처리
+    for (const prev of usedPositions) {
+      if (Math.abs(prev.x - px) < 6 && Math.abs(prev.y - py) < 5) {
+        px = Math.min(86, Math.max(14, px + (idx % 2 === 0 ? 7 : -7)));
+        py = Math.min(92, Math.max(12, py + (idx % 2 === 0 ? -5 : 5)));
+      }
+    }
+    usedPositions.push({ x: px, y: py });
+
     const pin = document.createElement('button');
     pin.type = 'button';
     pin.className = 'map-pin-btn';
     pin.dataset.placeId = place.id;
-    pin.style.left = `${place.mapX || 45}%`;
-    pin.style.top = `${place.mapY || 45}%`;
-    const shortLabel = place.name.split('(')[0].trim().slice(0, 9);
+    pin.style.left = `${px}%`;
+    pin.style.top = `${py}%`;
+    const shortLabel = place.name.split('(')[0].split('&')[0].trim().slice(0, 9);
     pin.textContent = `📍 ${shortLabel}`;
     pin.onclick = () => focusPlaceOnMap(place);
     layer.appendChild(pin);
@@ -933,6 +1115,11 @@ function focusPlaceById(placeId) {
   const target = allPool.find((p) => p.id === placeId);
   if (target) {
     focusPlaceOnMap(target);
+    // 모바일이나 작은 화면에서 지도가 보이도록 부드럽게 스크롤
+    const mapViewport = document.getElementById('mapViewport');
+    if (mapViewport && window.innerWidth <= 1024) {
+      mapViewport.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     showToast(`📍 지도에서 [${target.name}] 위치를 표시합니다.`);
   }
 }
@@ -945,13 +1132,19 @@ function focusPlaceOnMap(place) {
     pin.classList.toggle('active-pin', pin.dataset.placeId === place.id);
   });
 
+  // 카드 강조
+  document.querySelectorAll('.place-card').forEach((card) => {
+    card.classList.toggle('focused-card', card.dataset.placeId === place.id);
+  });
+
   // 지도 하단 상세 배너 업데이트
   document.getElementById('bannerCategory').textContent = place.category || '📍 추천 여행지';
   document.getElementById('bannerTitle').textContent = place.name;
   document.getElementById('bannerAddr').textContent = `📍 주소: ${place.address || place.region}`;
   document.getElementById('bannerTip').textContent = place.seniorTip || place.desc;
 
-  const kakaoSearchUrl = `https://map.kakao.com/link/search/${encodeURIComponent(place.name)}`;
+  const searchTarget = place.kakaoQuery || place.name;
+  const kakaoSearchUrl = `https://map.kakao.com/link/search/${encodeURIComponent(searchTarget)}`;
   document.getElementById('bannerRouteBtn').href = kakaoSearchUrl;
   document.getElementById('openKakaoMapExternalBtn').href = kakaoSearchUrl;
 
@@ -966,7 +1159,7 @@ function focusPlaceOnMap(place) {
 }
 
 // ==========================================================================
-// 6. 탭 2: AI & PlayMCP 카카오맵 장소 검색 기능
+// 6. 탭 2: AI & PlayMCP 카카오맵 장소 검색 기능 (실존 명소 스마트 매칭)
 // ==========================================================================
 function quickSearchPlace(queryText) {
   document.getElementById('placeSearchInput').value = queryText;
@@ -1003,7 +1196,25 @@ async function executeAiPlaceSearch() {
     }
   }
 
-  // 2) 내장 스마트 여행·맛집 검색 엔진
+  // 2) Kakao Map Places 서비스가 로드되어 있으면 실시간 카카오맵 키워드 검색 활용
+  if (window.kakao && window.kakao.maps && window.kakao.maps.services) {
+    try {
+      const kakaoLivePlaces = await searchViaKakaoPlacesSdk(query);
+      if (kakaoLivePlaces && kakaoLivePlaces.length > 0) {
+        currentDisplayedPlaces = kakaoLivePlaces;
+        statusEl.innerHTML = `✅ 카카오맵 실시간 검색으로 <strong>"${escapeHtml(query)}"</strong> 명소 ${kakaoLivePlaces.length}곳을 찾았습니다!`;
+        renderPlaceCards(kakaoLivePlaces, 'searchResultContainer', false);
+        updateMapPins(kakaoLivePlaces, `🔍 "${query}" 추천 지도`);
+        focusPlaceOnMap(kakaoLivePlaces[0]);
+        showToast(`🗺️ "${query}" 실시간 검색이 완료되었습니다!`);
+        return;
+      }
+    } catch (e) {
+      console.warn('카카오 실시간 검색 폴백:', e);
+    }
+  }
+
+  // 3) 내장 스마트 여행·맛집 검색 엔진 (단어 단위 매칭 + 전국 다양성 보장, 서울식물원 중복 고정 제거!)
   const results = buildSmartPlaceSearchResults(query);
   currentDisplayedPlaces = results;
   statusEl.innerHTML = `✅ <strong>"${escapeHtml(query)}"</strong> 조건에 딱 맞는 추천 장소 ${results.length}곳을 찾았습니다!`;
@@ -1014,6 +1225,42 @@ async function executeAiPlaceSearch() {
     focusPlaceOnMap(results[0]);
   }
   showToast(`🗺️ "${query}" 장소 검색이 완료되었습니다!`);
+}
+
+// 카카오맵 Places SDK 실시간 검색 래퍼
+function searchViaKakaoPlacesSdk(rawQuery) {
+  return new Promise((resolve) => {
+    const cleanQ = rawQuery
+      .replace(/(추천해줘|추천해달라고|추천|찾아줘|알려줘|어디가|좋을까|갈만한곳|보이는|걷기|좋은|곳)/g, ' ')
+      .trim() || '명소';
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(cleanQ, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK && Array.isArray(data) && data.length > 0) {
+        const mapped = data.slice(0, 4).map((item, idx) => {
+          const pos = inferKoreaMapPosition(`${item.address_name} ${item.place_name}`, idx);
+          return {
+            id: `kakao-live-${Date.now()}-${idx}`,
+            name: item.place_name,
+            kakaoQuery: item.place_name,
+            region: (item.address_name || '').split(' ').slice(0, 2).join(' ') || cleanQ,
+            category: item.category_group_name || '🔍 카카오맵 추천',
+            address: item.road_address_name || item.address_name,
+            desc: `${item.category_name || cleanQ} · 카카오맵에서 인기 있는 추천 장소입니다.`,
+            seniorTip: item.phone
+              ? `📞 전화번호: ${item.phone} · [🗺️ 카카오맵 길찾기]를 누르면 상세 경로가 열립니다.`
+              : '💡 [🗺️ 카카오맵 길찾기] 버튼을 누르면 정확한 위치와 길 안내를 보실 수 있습니다.',
+            lat: parseFloat(item.y),
+            lng: parseFloat(item.x),
+            mapX: pos.mapX,
+            mapY: pos.mapY
+          };
+        });
+        resolve(mapped);
+      } else {
+        resolve(null);
+      }
+    });
+  });
 }
 
 async function callPlayMcpKakaoMap(query) {
@@ -1037,17 +1284,18 @@ async function callPlayMcpKakaoMap(query) {
   const data = await res.json();
   if (data && data.result && Array.isArray(data.result.places)) {
     return data.result.places.map((p, idx) => {
-      const pos = inferKoreaMapPosition(p.address_name || query);
+      const pos = inferKoreaMapPosition(p.address_name || query, idx);
       return {
         id: `mcp-${Date.now()}-${idx}`,
         name: p.place_name || query,
+        kakaoQuery: p.place_name || query,
         region: p.address_name || '추천 지역',
         category: '🔍 PlayMCP 카카오맵',
         address: p.road_address_name || p.address_name || query,
         desc: p.category_name || `"${query}" 관련 카카오맵 실시간 추천 장소입니다.`,
         seniorTip: '💡 [카카오맵 길찾기]를 누르시면 상세 위치와 전화번호를 바로 확인하실 수 있습니다.',
-        lat: parseFloat(p.y) || 37.5665,
-        lng: parseFloat(p.x) || 126.978,
+        lat: parseFloat(p.y) || pos.lat,
+        lng: parseFloat(p.x) || pos.lng,
         mapX: pos.mapX,
         mapY: pos.mapY
       };
@@ -1056,58 +1304,130 @@ async function callPlayMcpKakaoMap(query) {
   return null;
 }
 
+// 스마트 키워드 분석 및 전국 명소 매칭 엔진
 function buildSmartPlaceSearchResults(query) {
+  // 1) 전체 52곳의 실존 명소 풀 생성
   const allPlaces = [];
   Object.values(TRAVEL_THEMES).forEach((theme) => {
     theme.places.forEach((p) => allPlaces.push(p));
   });
+  EXTRA_FAMOUS_PLACES.forEach((p) => allPlaces.push(p));
 
-  const q = query.toLowerCase();
-  const matched = allPlaces.filter(
-    (p) =>
-      p.name.toLowerCase().includes(q) ||
-      p.region.toLowerCase().includes(q) ||
-      p.desc.toLowerCase().includes(q) ||
-      p.address.toLowerCase().includes(q)
-  );
+  // 2) 불용어("추천해줘", "어디", "좋은", "곳" 등)를 제거하고 핵심 키워드 토큰만 추출
+  const stopWords = [
+    '추천해줘', '추천해달라고', '추천해주세요', '추천', '찾아줘', '알려줘', '보여줘',
+    '어디가', '어디', '좋을까', '갈만한', '갈만한곳', '가고싶어', '보이는', '걷기',
+    '좋은', '곳', '여행지', '여행', '코스', '나들이', '근처', '주변', '에서', '과', '와', '이랑'
+  ];
 
-  if (matched.length >= 2) {
-    return matched;
+  let cleaned = query;
+  stopWords.forEach((sw) => {
+    cleaned = cleaned.replaceAll(sw, ' ');
+  });
+
+  const tokens = cleaned
+    .split(/\s+/)
+    .map((t) => t.trim().toLowerCase())
+    .filter((t) => t.length >= 2);
+
+  // 테마 별칭 매핑 (예: "바다" -> sea/island, "맛집" -> market, "꽃" -> flower, "숲" -> hanok/spa)
+  const scored = allPlaces.map((place) => {
+    let score = 0;
+    const targetText = `${place.name} ${place.region} ${place.category} ${place.desc} ${place.address} ${place.seniorTip}`.toLowerCase();
+
+    tokens.forEach((tk) => {
+      if (place.region.toLowerCase().includes(tk) || place.name.toLowerCase().includes(tk)) {
+        score += 5; // 지역명·장소명 일치 시 높은 점수
+      } else if (targetText.includes(tk)) {
+        score += 2; // 설명·카테고리 일치
+      }
+      if ((tk.includes('맛집') || tk.includes('시장') || tk.includes('먹거리')) && place.category.includes('미식')) {
+        score += 3;
+      }
+      if ((tk.includes('카페') || tk.includes('찻집')) && (targetText.includes('카페') || targetText.includes('찻집'))) {
+        score += 3;
+      }
+      if (tk.includes('바다') && (place.category.includes('바다') || place.category.includes('섬'))) {
+        score += 3;
+      }
+      if ((tk.includes('숲') || tk.includes('산책') || tk.includes('힐링')) && (targetText.includes('숲') || targetText.includes('산책'))) {
+        score += 2;
+      }
+    });
+
+    return { place, score };
+  });
+
+  const matched = scored
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.place);
+
+  // 3) 만약 사용자가 그냥 "추천해줘", "여행지 추천"처럼 지역 없이 입력했다면:
+  //    매번 다른 전국 팔도 대표 명소 4곳을 랜덤으로 골라 추천! (절대 한 곳만 고정되지 않음)
+  if (tokens.length === 0) {
+    const shuffled = [...allPlaces].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
   }
 
-  const cleanKeyword = query.replace(/(추천해줘|찾아줘|알려줘|어디야|갈만한곳)/g, '').trim() || query;
-  const pos1 = inferKoreaMapPosition(cleanKeyword);
-  const pos2 = inferKoreaMapPosition(cleanKeyword);
+  // 4) 매칭된 실존 명소가 2곳 이상이면 상위 4곳을 바로 반환
+  if (matched.length >= 2) {
+    return matched.slice(0, 4);
+  }
 
-  return [
+  // 5) 우리 DB에 없는 세부 동네/키워드(예: "성수동 브런치", "대전 성심당")를 검색했을 때:
+  //    해당 지역의 정확한 지도 좌표에 핀을 꽂고, 카카오맵에서 그 키워드로 바로 검색되도록 연결!
+  const keywordLabel = tokens.join(' ') || query.trim();
+  const pos1 = inferKoreaMapPosition(keywordLabel, 0);
+  const pos2 = inferKoreaMapPosition(keywordLabel, 1);
+  const pos3 = inferKoreaMapPosition(keywordLabel, 2);
+
+  const customResults = [
     {
       id: `srch-${Date.now()}-1`,
-      name: `${cleanKeyword} 대표 산책 명소`,
-      region: cleanKeyword,
-      category: '🔍 AI 맞춤 추천',
-      address: `${cleanKeyword} 중심 관광 명소`,
-      desc: `"${cleanKeyword}"에서 많은 사랑을 받는 경치 좋고 걷기 편한 대표 여행 코스입니다.`,
-      seniorTip: '💡 아래 [🗺️ 카카오맵 길찾기] 버튼을 누르면 실제 카카오맵에서 정확한 위치와 주변 주차장을 보여줍니다.',
-      lat: 37.5665,
-      lng: 126.978,
+      name: `${keywordLabel} 인기 명소`,
+      kakaoQuery: `${keywordLabel} 가볼만한곳`,
+      region: keywordLabel,
+      category: '🔍 카카오맵 맞춤 추천',
+      address: `${keywordLabel} 대표 관광·산책 코스`,
+      desc: `"${keywordLabel}" 주변에서 방문객 평점이 높고 산책하기 좋은 대표 명소입니다.`,
+      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${keywordLabel} 가볼만한곳" 실제 목록과 위치를 바로 보여줍니다.`,
+      lat: pos1.lat,
+      lng: pos1.lng,
       mapX: pos1.mapX,
       mapY: pos1.mapY
     },
     {
       id: `srch-${Date.now()}-2`,
-      name: `${cleanKeyword} 대표 맛집 & 카페 거리`,
-      region: cleanKeyword,
-      category: '🍲 주변 추천 맛집',
-      address: `${cleanKeyword} 현지인 추천 식당가`,
-      desc: `나들이 후 맛있게 식사하고 분위기 좋은 카페를 즐기기 좋은 "${cleanKeyword}" 인기 거리입니다.`,
-      seniorTip: '💡 [⭐ 내 지도첩에 별표 저장]을 눌러두시면 언제든 카톡으로 친구들과 위치를 공유하실 수 있습니다.',
-      lat: 37.55,
-      lng: 126.99,
-      mapX: pos2.mapX + 4,
-      mapY: pos2.mapY + 3
+      name: `${keywordLabel} 대표 맛집 거리`,
+      kakaoQuery: `${keywordLabel} 맛집`,
+      region: keywordLabel,
+      category: '🍲 카카오맵 맛집 검색',
+      address: `${keywordLabel} 인기 식도락 거리`,
+      desc: `"${keywordLabel}" 현지인과 여행객들이 자주 찾는 대표 맛집 거리입니다.`,
+      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${keywordLabel} 맛집" 실제 식당 위치를 바로 확인하실 수 있습니다.`,
+      lat: pos2.lat,
+      lng: pos2.lng,
+      mapX: pos2.mapX,
+      mapY: pos2.mapY
     },
-    ...(matched.length > 0 ? matched : [allPlaces[0]])
+    {
+      id: `srch-${Date.now()}-3`,
+      name: `${keywordLabel} 분위기 좋은 카페`,
+      kakaoQuery: `${keywordLabel} 카페`,
+      region: keywordLabel,
+      category: '☕ 카카오맵 카페 검색',
+      address: `${keywordLabel} 전망·감성 카페`,
+      desc: `여행 중 여유롭게 차 한잔하며 쉬어가기 좋은 "${keywordLabel}" 인기 카페 코스입니다.`,
+      seniorTip: `💡 [⭐ 내 지도첩에 별표 저장]을 눌러두시면 언제든 카톡으로 친구들과 공유하실 수 있습니다.`,
+      lat: pos3.lat,
+      lng: pos3.lng,
+      mapX: pos3.mapX,
+      mapY: pos3.mapY
+    }
   ];
+
+  return matched.length === 1 ? [matched[0], ...customResults.slice(0, 2)] : customResults;
 }
 
 // 음성으로 여행지 검색하기
@@ -1158,7 +1478,7 @@ function speakCurrentRecommendations() {
 // ==========================================================================
 function loadSavedPlacesFromStorage() {
   try {
-    const raw = localStorage.getItem('yumi_saved_treasure_map');
+    const raw = localStorage.getItem('yumi_saved_treasure_map_v2');
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -1170,7 +1490,7 @@ function loadSavedPlacesFromStorage() {
 }
 
 function savePlacesToStorage() {
-  localStorage.setItem('yumi_saved_treasure_map', JSON.stringify(mySavedPlaces));
+  localStorage.setItem('yumi_saved_treasure_map_v2', JSON.stringify(mySavedPlaces));
   updateSavedCountBadge();
 }
 
@@ -1199,6 +1519,10 @@ function toggleBookmarkPlace(placeId) {
 
   savePlacesToStorage();
   renderPlaceCards(currentDisplayedPlaces, 'recommendListContainer', false);
+  const searchContainer = document.getElementById('searchResultContainer');
+  if (searchContainer && searchContainer.children.length > 0) {
+    renderPlaceCards(currentDisplayedPlaces, 'searchResultContainer', false);
+  }
   renderMyBookList();
   if (selectedBannerPlace && selectedBannerPlace.name === place.name) {
     focusPlaceOnMap(place);
@@ -1225,18 +1549,19 @@ function addCustomPlaceToBook() {
     return;
   }
 
-  const pos = inferKoreaMapPosition(`${region} ${name}`);
+  const pos = inferKoreaMapPosition(`${region} ${name}`, mySavedPlaces.length);
 
   const newPlace = {
     id: `custom-${Date.now()}`,
     name: name,
+    kakaoQuery: `${region} ${name}`.trim(),
     region: region,
     category: '📌 내가 직접 적은 장소',
     address: `${region} ${name}`,
     desc: memo,
     seniorTip: `📝 내 메모: ${memo}`,
-    lat: 37.5665,
-    lng: 126.978,
+    lat: pos.lat,
+    lng: pos.lng,
     mapX: pos.mapX,
     mapY: pos.mapY
   };
@@ -1325,7 +1650,8 @@ async function copyShareTextToClipboard() {
     `🗺️ [나만의 카톡 보물지도첩] ${currentSharePayload.title}`,
     ``,
     ...currentSharePayload.places.map((p, i) => {
-      const mapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(p.name)}`;
+      const q = p.kakaoQuery || p.name;
+      const mapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(q)}`;
       return `${i + 1}. ${p.name} (${p.region})\n   💬 ${p.seniorTip || p.desc}\n   📍 카카오맵 길찾기: ${mapUrl}`;
     }),
     ``,
@@ -1344,7 +1670,8 @@ async function sendViaKakaoSdk() {
   if (!currentSharePayload || currentSharePayload.places.length === 0) return;
 
   const first = currentSharePayload.places[0];
-  const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(first.name)}`;
+  const q = first.kakaoQuery || first.name;
+  const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(q)}`;
 
   if (window.Kakao && window.Kakao.isInitialized()) {
     const descText = currentSharePayload.places
@@ -1430,7 +1757,7 @@ function initKakaoServices() {
     }
   }
 
-  // 2) 카카오맵 Web SDK 동적 로드
+  // 2) 카카오맵 Web SDK (Places 검색 라이브러리 포함) 동적 로드
   if (window.location.protocol.startsWith('http')) {
     const existingScript = document.getElementById('kakaoMapSdkScript');
     if (!existingScript) {
@@ -1438,7 +1765,7 @@ function initKakaoServices() {
       script.id = 'kakaoMapSdkScript';
       script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(
         mapAppConfig.kakaoKey
-      )}&autoload=false`;
+      )}&libraries=services&autoload=false`;
       script.onload = () => {
         if (window.kakao && window.kakao.maps) {
           window.kakao.maps.load(() => {
