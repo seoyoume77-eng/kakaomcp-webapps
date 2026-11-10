@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>추억의 음악 다방 & 카톡 주크박스</title>
-  <!-- 정갈하고 읽기 편한 한글 웹폰트 (고운바탕 & 프리텐다드) -->
+  <title>전국 여행지 추천 & 나만의 카톡 보물지도첩</title>
+  <!-- 읽기 편한 한글 웹폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- 카카오 디벨로퍼스 공식 JavaScript SDK -->
+  <!-- 카카오 디벨로퍼스 공식 카카오톡 공유 SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="font-normal">
 
-  <!-- 상단 돋보기(글씨 크기) & 카카오 설정 바 -->
-  <header class="top-utility-bar" aria-label="화면 및 연결 설정">
+  <!-- 1. 상단 글씨 크기 & 웹앱 전환 & 카카오 설정 바 -->
+  <header class="top-utility-bar" aria-label="화면 글씨 크기 및 카카오 설정">
     <div class="utility-inner">
       <div class="font-controls" role="group" aria-label="글씨 크기 조절">
         <span class="utility-label">🔍 글씨 크기:</span>
@@ -24,234 +24,406 @@
         <button type="button" class="size-btn" data-size="xlarge" onclick="setFontSize('xlarge')">아주 크게</button>
       </div>
       <div class="connection-controls">
-        <a href="travel-map/index.html" class="switch-app-btn">🗺️ 여행지 보물지도첩 가기</a>
-        <button type="button" class="config-btn" id="openConfigBtn" onclick="openConfigModal()">
-          ⚙️ 카카오 · PlayMCP 연결 설정
+        <button type="button" class="config-btn" onclick="openConfigModal()">
+          ⚙️ 카카오맵 · PlayMCP 설정
           <span class="status-dot connected" id="connectionDot" title="연결 상태"></span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 메인 라디오 본체 컨테이너 -->
-  <main class="radio-container">
+  <!-- 2. 메인 여행 지도첩 컨테이너 -->
+  <main class="mapbook-container">
 
-    <!-- 라디오 상단 스피커 & 간판 영역 -->
-    <section class="radio-header">
-      <div class="speaker-grille" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="station-badge">ON AIR · PlayMCP x Kakao</div>
-      <h1 class="radio-title">📻 추억의 음악 다방</h1>
-      <p class="radio-subtitle">
-        기분 따라 채널만 콕 누르세요! <strong>멜론(Melon)</strong>이 선곡하고 <strong>카카오톡</strong>으로 배달해 드립니다.
+    <!-- 상단 타이틀 배너 -->
+    <section class="hero-header">
+      <div class="hero-badge">PlayMCP x Kakao Map 스마트 여행 가이드</div>
+      <h1 class="hero-title">🗺️ 전국 여행지 추천 & 나만의 카톡 보물지도첩</h1>
+      <p class="hero-subtitle">
+        전국 팔도의 아름다운 여행 명소 <strong>45곳</strong>을 테마별로 만나보고, 마음에 드는 곳은 <strong>⭐ 내 보물지도</strong>에 담아 <strong>카카오톡</strong>으로 공유해 보세요!
       </p>
     </section>
 
-    <!-- 3가지 큰 서랍(탭) 전환 버튼 -->
-    <nav class="channel-tabs" role="tablist" aria-label="선곡 방식 선택">
-      <button type="button" role="tab" aria-selected="true" class="tab-btn active" id="tabGenreBtn" onclick="switchTab('genre')">
-        🎼 장르별 채널 (8종)
+    <!-- 3가지 큰 기능 서랍(탭) -->
+    <nav class="main-tabs" role="tablist" aria-label="주요 메뉴 선택">
+      <button type="button" role="tab" aria-selected="true" class="tab-btn active" id="tabRecommendBtn" onclick="switchTab('recommend')">
+        ✨ 테마별 여행지 추천 (8종 · 45곳)
       </button>
-      <button type="button" role="tab" aria-selected="false" class="tab-btn" id="tabMoodBtn" onclick="switchTab('mood')">
-        🌤️ 상황·날씨별 채널 (5종)
+      <button type="button" role="tab" aria-selected="false" class="tab-btn" id="tabSearchBtn" onclick="switchTab('search')">
+        🔍 AI 여행지·맛집 찾기
       </button>
-      <button type="button" role="tab" aria-selected="false" class="tab-btn" id="tabRequestBtn" onclick="switchTab('request')">
-        🎙️ DJ에게 직접 신청곡
+      <button type="button" role="tab" aria-selected="false" aria-controls="panelMyBook" class="tab-btn" id="tabMyBookBtn" onclick="switchTab('mybook')">
+        ⭐ 내 별표 보물지도첩 (<span id="savedCountBadge">3</span>)
       </button>
     </nav>
 
-    <!-- 탭 1: 장르별 채널 (8가지) -->
-    <section id="panelGenre" class="tab-panel active" role="tabpanel" aria-labelledby="tabGenreBtn">
-      <h2 class="section-guide">👇 듣고 싶은 음악 스타일을 하나 눌러보세요</h2>
-      <div class="channel-grid">
-        <button type="button" class="channel-card" onclick="selectChannel('7080')">
-          <span class="channel-icon">🎸</span>
-          <strong class="channel-name">7080 통기타 & 포크송</strong>
-          <span class="channel-desc">김광석, 송창식, 양희은 등 추억의 통기타</span>
-        </button>
+    <!-- 본문 2단 반응형 레이아웃: [왼쪽: 대한민국 지도 화면] + [오른쪽: 탭별 컨트롤 및 장소 카드] -->
+    <div class="workspace-grid">
 
-        <button type="button" class="channel-card" onclick="selectChannel('trot')">
-          <span class="channel-icon">🎤</span>
-          <strong class="channel-name">인기 트로트 & 히트곡</strong>
-          <span class="channel-desc">임영웅, 이찬원부터 나훈아, 주현미까지</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('ballad8090')">
-          <span class="channel-icon">🎹</span>
-          <strong class="channel-name">8090 감성 가요 & 발라드</strong>
-          <span class="channel-desc">조용필, 이문세, 이선희, 변진섭 명곡</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('oldpop')">
-          <span class="channel-icon">📻</span>
-          <strong class="channel-name">6070 추억의 올드팝</strong>
-          <span class="channel-desc">비틀즈, 카펜터즈, 아바, 사이먼 앤 가펑클</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('ost')">
-          <span class="channel-icon">🎬</span>
-          <strong class="channel-name">명화 OST & 영화음악</strong>
-          <span class="channel-desc">러브스토리, 시네마천국, 로마의 휴일</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('classic')">
-          <span class="channel-icon">🎻</span>
-          <strong class="channel-name">품격 있는 클래식 & 한국 가곡</strong>
-          <span class="channel-desc">사계, 쇼팽 피아노곡, 그리운 금강산</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('jazz')">
-          <span class="channel-icon">🎷</span>
-          <strong class="channel-name">찻집 분위기 재즈 & 연주곡</strong>
-          <span class="channel-desc">감미로운 색소폰, 보사노바, 기타 연주</span>
-        </button>
-
-        <button type="button" class="channel-card" onclick="selectChannel('healing')">
-          <span class="channel-icon">🌿</span>
-          <strong class="channel-name">마음 치유 명상 & 전통 음악</strong>
-          <span class="channel-desc">다도 음악, 자연의 소리, 국악·찬송 명상</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- 탭 2: 상황·날씨별 채널 (5가지) -->
-    <section id="panelMood" class="tab-panel" role="tabpanel" aria-labelledby="tabMoodBtn">
-      <h2 class="section-guide">👇 지금 어떤 시간을 보내고 계시나요?</h2>
-      <div class="channel-grid mood-grid">
-        <button type="button" class="channel-card mood-card" onclick="selectChannel('walk')">
-          <span class="channel-icon">👟</span>
-          <strong class="channel-name">아침 산책·운동할 때</strong>
-          <span class="channel-desc">발걸음이 가벼워지는 경쾌하고 활기찬 노래</span>
-        </button>
-
-        <button type="button" class="channel-card mood-card" onclick="selectChannel('tea')">
-          <span class="channel-icon">☕</span>
-          <strong class="channel-name">오후에 따뜻한 차 한잔할 때</strong>
-          <span class="channel-desc">마음이 편안해지는 다방 커피 같은 음악</span>
-        </button>
-
-        <button type="button" class="channel-card mood-card" onclick="selectChannel('rain')">
-          <span class="channel-icon">☔</span>
-          <strong class="channel-name">비 오거나 옛 생각 나는 날</strong>
-          <span class="channel-desc">창밖을 보며 듣기 좋은 감성적인 노래</span>
-        </button>
-
-        <button type="button" class="channel-card mood-card" onclick="selectChannel('travel')">
-          <span class="channel-icon">🚗</span>
-          <strong class="channel-name">가족·친구와 나들이 갈 때</strong>
-          <span class="channel-desc">차 안에서 다 함께 흥얼거리기 좋은 노래</span>
-        </button>
-
-        <button type="button" class="channel-card mood-card" onclick="selectChannel('night')">
-          <span class="channel-icon">🌙</span>
-          <strong class="channel-name">잠들기 전 편안한 밤</strong>
-          <span class="channel-desc">숙면을 도와주는 잔잔한 피아노와 연주곡</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- 탭 3: DJ에게 직접 신청곡 보내기 -->
-    <section id="panelRequest" class="tab-panel" role="tabpanel" aria-labelledby="tabRequestBtn">
-      <h2 class="section-guide">👇 듣고 싶은 가수나 사연을 적거나 마이크로 말씀해 보세요</h2>
-      <div class="dj-request-box">
-        <div class="quick-tags">
-          <span class="quick-label">인기 검색어:</span>
-          <button type="button" class="tag-chip" onclick="fillRequest('임영웅 노래 추천해줘')">#임영웅</button>
-          <button type="button" class="tag-chip" onclick="fillRequest('조용필 명곡 찾아줘')">#조용필</button>
-          <button type="button" class="tag-chip" onclick="fillRequest('모차르트 피아노 연주곡')">#모차르트</button>
-          <button type="button" class="tag-chip" onclick="fillRequest('신나는 7080 디스코')">#7080디스코</button>
-          <button type="button" class="tag-chip" onclick="fillRequest('비틀즈 올드팝 명곡')">#비틀즈</button>
+      <!-- [왼쪽 영역] 대한민국 팔도 지도 & 카카오맵 보드 -->
+      <section class="map-panel" aria-label="지도 표시 영역">
+        <div class="map-panel-header">
+          <div class="map-status-title">
+            <span class="pin-icon">📍</span>
+            <strong id="currentMapTitle">대한민국 추천 여행지 지도</strong>
+          </div>
+          <div class="map-header-btns">
+            <button type="button" id="toggleRealMapBtn" class="toggle-map-mode-btn" onclick="toggleMapMode()">
+              🗺️ 대한민국 지도 / 카카오맵 전환
+            </button>
+            <a
+              id="openKakaoMapExternalBtn"
+              href="https://map.kakao.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="external-map-btn"
+            >
+              🔍 큰 지도 열기
+            </a>
+          </div>
         </div>
 
-        <div class="input-row">
-          <input
-            type="text"
-            id="djInput"
-            class="dj-input"
-            placeholder="예: 나훈아 노래 찾아줘, 비 오는 날 듣기 좋은 재즈 틀어줘"
-            aria-label="신청곡 또는 가수 입력"
-            onkeydown="if(event.key==='Enter') submitDjRequest()"
-          />
-          <button type="button" class="voice-btn" id="voiceBtn" onclick="startVoiceInput()" title="목소리로 입력하기">
-            🎙️ 말하기
-          </button>
+        <!-- 지도 뷰포트 -->
+        <div class="map-viewport" id="mapViewport">
+          <!-- 실제 카카오맵 SDK 캔버스 -->
+          <div id="kakaoMapCanvas" class="kakao-map-canvas hidden"></div>
+
+          <!-- 실제 대한민국 권역별 지형·해안선·섬을 정밀하게 표현한 인터랙티브 지도 -->
+          <div id="interactiveMapBoard" class="interactive-map-board">
+            <div class="map-compass" aria-hidden="true">🧭 대한민국 팔도 여행지도</div>
+
+            <!-- 실제 대한민국 권역별(수도권·강원·충남·충북·전북·전남·경북·경남·제주·울릉·독도) 정밀 지형 SVG -->
+            <svg class="korea-svg" viewBox="0 0 500 620" aria-label="대한민국 지도">
+              <defs>
+                <filter id="mapDropShadow" x="-10%" y="-10%" width="125%" height="125%">
+                  <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#0c3554" flood-opacity="0.24" />
+                </filter>
+              </defs>
+
+              <!-- 바다 배경 위도·경도 그리드 -->
+              <g stroke="#b3daf1" stroke-width="1" stroke-dasharray="5,5" opacity="0.6">
+                <line x1="0" y1="110" x2="500" y2="110" />
+                <line x1="0" y1="230" x2="500" y2="230" />
+                <line x1="0" y1="350" x2="500" y2="350" />
+                <line x1="0" y1="470" x2="500" y2="470" />
+                <line x1="120" y1="0" x2="120" y2="620" />
+                <line x1="250" y1="0" x2="250" y2="620" />
+                <line x1="380" y1="0" x2="380" y2="620" />
+              </g>
+
+              <!-- 대한민국 권역별 정밀 폴리곤 (실제 지도 비례 및 해안선 굴곡 반영) -->
+              <g filter="url(#mapDropShadow)" stroke="#386641" stroke-width="2.2" stroke-linejoin="round">
+
+                <!-- 1. 서울·인천·경기도 (강화만, 경기만, 평택항 굴곡) -->
+                <path
+                  fill="#e9f5db"
+                  d="M 155,78 L 195,70 L 218,74 L 226,125 L 235,175 L 222,205 L 185,212 L 152,206 L 146,188 L 128,176 L 138,158 L 122,144 L 132,124 L 118,112 L 138,96 Z"
+                />
+                <!-- 강화도 & 영종도 -->
+                <path fill="#e9f5db" d="M 104,124 L 116,122 L 118,136 L 105,137 Z" />
+                <ellipse cx="112" cy="150" rx="8" ry="4.5" fill="#e9f5db" />
+
+                <!-- 2. 강원도 (고성~강릉~삼척 동해안 해안선 & 태백산맥) -->
+                <path
+                  fill="#d8f3dc"
+                  d="M 195,70 L 238,52 L 268,36 L 285,28 L 302,58 L 318,92 L 338,128 L 358,166 L 372,202 L 368,218 L 316,222 L 282,208 L 235,175 L 226,125 L 218,74 Z"
+                />
+
+                <!-- 3. 충청남도·세종·대전 (태안반도, 천수만, 안면도, 서천 해안선) -->
+                <path
+                  fill="#fefae0"
+                  d="M 152,206 L 185,212 L 216,214 L 218,255 L 212,298 L 188,308 L 145,314 L 132,295 L 135,272 L 118,256 L 115,278 L 104,276 L 98,252 L 84,242 L 94,224 L 114,228 L 126,216 L 142,218 Z"
+                />
+                <!-- 안면도 -->
+                <path fill="#fefae0" d="M 102,258 L 110,259 L 112,284 L 103,283 Z" />
+
+                <!-- 4. 충청북도 (소백산맥 내륙 지형) -->
+                <path
+                  fill="#e2ece9"
+                  d="M 222,205 L 235,175 L 282,208 L 316,222 L 312,248 L 282,262 L 262,286 L 242,306 L 212,298 L 218,255 L 216,214 Z"
+                />
+
+                <!-- 5. 경상북도·대구 (울진~영덕~포항 호미곶 돌출부~경주 해안선) -->
+                <path
+                  fill="#ecf39e"
+                  d="M 316,222 L 368,218 L 375,258 L 378,298 L 382,328 L 398,324 L 394,348 L 382,368 L 354,376 L 318,372 L 282,368 L 254,348 L 242,306 L 262,286 L 282,262 L 312,248 Z"
+                />
+
+                <!-- 6. 전라북도 (군산, 변산반도, 새만금만 굴곡) -->
+                <path
+                  fill="#d8e2dc"
+                  d="M 145,314 L 188,308 L 212,298 L 242,306 L 254,348 L 238,376 L 188,382 L 126,386 L 116,372 L 132,358 L 112,348 L 116,334 L 136,332 Z"
+                />
+
+                <!-- 7. 경상남도·부산·울산 (울산 간절곶, 부산 해운대, 거제·통영·남해 한려수도) -->
+                <path
+                  fill="#cce3de"
+                  d="M 254,348 L 282,368 L 318,372 L 354,376 L 382,368 L 374,396 L 356,416 L 332,422 L 308,414 L 296,432 L 278,424 L 266,434 L 244,424 L 232,398 L 238,376 Z"
+                />
+                <!-- 거제도 & 남해도 -->
+                <path fill="#cce3de" d="M 304,426 L 320,422 L 324,444 L 306,448 Z" />
+                <path fill="#cce3de" d="M 254,436 L 270,436 L 268,454 L 252,452 Z" />
+
+                <!-- 8. 전라남도·광주 (여수반도, 고흥반도, 해남 땅끝, 무안·신안 반도) -->
+                <path
+                  fill="#e9f5db"
+                  d="M 126,386 L 188,382 L 238,376 L 232,398 L 244,424 L 248,452 L 236,462 L 226,442 L 212,452 L 216,472 L 198,476 L 192,456 L 172,468 L 154,484 L 126,492 L 114,476 L 124,456 L 104,446 L 114,428 L 98,416 L 112,402 Z"
+                />
+                <!-- 진도 & 완도 & 신안 다도해 섬들 -->
+                <path fill="#e9f5db" d="M 94,474 L 110,472 L 106,490 L 90,486 Z" />
+                <ellipse cx="144" cy="496" rx="10" ry="5.5" fill="#e9f5db" />
+                <ellipse cx="86" cy="436" rx="8" ry="5" fill="#e9f5db" />
+                <ellipse cx="82" cy="452" rx="7" ry="4.5" fill="#e9f5db" />
+
+                <!-- 9. 제주특별자치도 (타원형 화산섬 + 우도/마라도) -->
+                <path
+                  fill="#fefae0"
+                  stroke-width="2.6"
+                  d="M 116,562 C 135,546 178,545 198,556 C 210,564 206,582 186,590 C 162,598 128,596 112,584 C 104,576 106,568 116,562 Z"
+                />
+                <circle cx="208" cy="560" r="3" fill="#fefae0" />
+
+                <!-- 10. 울릉도 & 독도 -->
+                <path
+                  fill="#d8f3dc"
+                  d="M 426,182 L 438,176 L 444,186 L 436,196 L 424,192 Z"
+                />
+                <circle cx="472" cy="196" r="4" fill="#d8f3dc" />
+                <circle cx="480" cy="198" r="3.2" fill="#d8f3dc" />
+              </g>
+
+              <!-- 서울 별표 중심 표시 및 한강·낙동강 물줄기 -->
+              <g stroke="#61a5c2" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round">
+                <path d="M 128,150 Q 175,156 218,168 T 286,148" />
+                <path d="M 296,245 Q 305,332 332,418" />
+              </g>
+
+              <!-- 권역별 지명 라벨 -->
+              <g class="map-region-labels" font-family="Pretendard, sans-serif" font-weight="800" font-size="12.5" fill="#1b4332" text-anchor="middle" opacity="0.82">
+                <text x="176" y="152">서울·경기</text>
+                <text x="292" y="138">강원도</text>
+                <text x="164" y="262">충청남도</text>
+                <text x="252" y="252">충청북도</text>
+                <text x="184" y="352">전라북도</text>
+                <text x="176" y="434">전라남도</text>
+                <text x="322" y="308">경상북도</text>
+                <text x="302" y="398">경상남도</text>
+                <text x="364" y="418">부산</text>
+                <text x="158" y="576">제주도</text>
+                <text x="434" y="168" font-size="11" fill="#1e3a8a">울릉도</text>
+                <text x="475" y="184" font-size="11" fill="#1e3a8a">독도</text>
+              </g>
+
+              <!-- 동해 / 서해 / 남해 바다 명칭 -->
+              <g font-family="Gowun Batang, serif" font-weight="700" font-size="15" fill="#1d4ed8" opacity="0.65">
+                <text x="435" y="305">동 해</text>
+                <text x="34" y="305">서 해</text>
+                <text x="275" y="525">남 해</text>
+              </g>
+            </svg>
+
+            <!-- 지도 위에 동적으로 꽂히는 핀(마커) 컨테이너 -->
+            <div id="mapMarkersLayer" class="map-markers-layer"></div>
+          </div>
         </div>
 
-        <button type="button" class="submit-request-btn" onclick="submitDjRequest()">
-          🎵 PlayMCP 멜론 DJ에게 노래 찾아달라고 하기
-        </button>
-      </div>
-    </section>
-
-    <!-- 선곡 결과 전광판 (노래 카드 리스트 + 카카오톡 전송 영역) -->
-    <section id="resultSection" class="result-section" aria-live="polite">
-      <div class="dj-comment-box">
-        <div class="dj-avatar">🎧</div>
-        <div class="dj-bubble">
-          <div class="dj-name">추억 다방 AI DJ (PlayMCP 멜론 연동)</div>
-          <p id="djMessage" class="dj-text">
-            안녕하세요! 위에서 원하시는 음악 채널 버튼을 누르시면, 오늘 기분에 꼭 맞는 명곡 3곡을 골라 드립니다.
-          </p>
+        <!-- 현재 선택된 장소 상세 카드 (지도 바로 아래 표시) -->
+        <div id="selectedPlaceBanner" class="selected-place-banner">
+          <div class="selected-place-top">
+            <span class="place-tag-chip" id="bannerCategory">🌸 추천 명소</span>
+            <h3 class="selected-place-name" id="bannerTitle">지도에서 장소를 누르거나 오른쪽 테마를 골라보세요!</h3>
+          </div>
+          <p class="selected-place-addr" id="bannerAddr">📍 위치 정보가 이곳에 큰 글씨로 표시됩니다.</p>
+          <p class="selected-place-tip" id="bannerTip">💡 산책 코스와 주차장·주변 볼거리 꿀팁을 한눈에 안내해 드립니다.</p>
+          <div class="banner-action-row">
+            <a id="bannerRouteBtn" href="https://map.kakao.com/" target="_blank" rel="noopener noreferrer" class="route-btn">
+              🚗 카카오맵 길찾기 바로가기
+            </a>
+            <button type="button" class="bookmark-toggle-btn" id="bannerSaveBtn" onclick="saveCurrentBannerPlace()">
+              ⭐ 내 보물지도에 별표 저장
+            </button>
+            <button type="button" class="katalk-send-btn" onclick="openKakaoShareForCurrentPlace()">
+              💛 카카오톡으로 위치 보내기
+            </button>
+          </div>
         </div>
-        <button type="button" class="tts-btn" onclick="speakDjMessage()" title="DJ 안내 멘트 소리로 듣기">
-          🔊 설명 듣기
-        </button>
-      </div>
+      </section>
 
-      <!-- 추천 노래 카드들이 들어가는 자리 -->
-      <div id="songListContainer" class="song-list"></div>
+      <!-- [오른쪽 영역] 탭 1 / 탭 2 / 탭 3 내용 패널 -->
+      <section class="content-panel">
 
-      <!-- 카카오톡으로 보내기 액션 버튼 영역 -->
-      <div id="kakaoActionBox" class="kakao-action-box hidden">
-        <h3 class="action-title">💛 마음에 드는 노래를 카카오톡으로 받아보세요!</h3>
-        <div class="kakao-btn-group">
-          <button type="button" class="kakao-btn memo-btn" onclick="sendToMyKakaoMemo()">
-            📥 내 카카오톡(나와의 채팅방)에 보관하기
-          </button>
-          <button type="button" class="kakao-btn share-btn" onclick="shareToKakaoFriend()">
-            💌 친구·가족에게 카카오톡으로 노래 선물하기
-          </button>
+        <!-- 탭 1: 테마별 여행지 추천 (8종 · 총 45곳) -->
+        <div id="panelRecommend" class="tab-panel active" role="tabpanel" aria-labelledby="tabRecommendBtn">
+          <h2 class="panel-heading">1단계: 어떤 여행을 떠나고 싶으신가요? (8가지 테마)</h2>
+          <div class="theme-grid">
+            <button type="button" class="theme-btn active" data-theme="flower" onclick="selectTravelTheme('flower')">
+              <span class="theme-emoji">🌸</span>
+              <strong>꽃길 · 수목원</strong>
+              <small>사계절 꽃구경 산책 명소 (6곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="sea" onclick="selectTravelTheme('sea')">
+              <span class="theme-emoji">🌊</span>
+              <strong>바다 · 호수 산책길</strong>
+              <small>탁 트인 경치와 수변 산책로 (6곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="hanok" onclick="selectTravelTheme('hanok')">
+              <span class="theme-emoji">🍵</span>
+              <strong>한옥마을 · 숲속 사찰</strong>
+              <small>전통 찻집과 고즈넉한 산사 (6곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="market" onclick="selectTravelTheme('market')">
+              <span class="theme-emoji">🍲</span>
+              <strong>전통시장 · 노포 미식</strong>
+              <small>전통 장터와 대표 맛집 거리 (6곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="train" onclick="selectTravelTheme('train')">
+              <span class="theme-emoji">🚂</span>
+              <strong>기차 · 케이블카 여행</strong>
+              <small>편안하게 즐기는 전망 코스 (6곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="spa" onclick="selectTravelTheme('spa')">
+              <span class="theme-emoji">♨️</span>
+              <strong>온천 · 숲속 힐링</strong>
+              <small>따뜻한 온천수와 피톤치드 휴식 (5곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="island" onclick="selectTravelTheme('island')">
+              <span class="theme-emoji">🏝️</span>
+              <strong>아름다운 섬 · 해안 비경</strong>
+              <small>제주·거제·남해·신안·울릉 (5곳)</small>
+            </button>
+
+            <button type="button" class="theme-btn" data-theme="history" onclick="selectTravelTheme('history')">
+              <span class="theme-emoji">🏛️</span>
+              <strong>고궁 · 역사문화 산책</strong>
+              <small>왕궁·박물관·야경 명소 (5곳)</small>
+            </button>
+          </div>
+
+          <div class="list-header-row">
+            <h3 class="sub-heading" id="recommendListTitle">🌸 꽃길 · 수목원 추천 명소</h3>
+            <button type="button" class="tts-small-btn" onclick="speakCurrentRecommendations()">
+              🔊 추천 설명 듣기
+            </button>
+          </div>
+
+          <!-- 추천 장소 카드 리스트 -->
+          <div id="recommendListContainer" class="place-card-list"></div>
         </div>
-        <p class="action-help" id="kakaoActionNotice">
-          💡 버튼을 누르면 추천된 노래 3곡의 제목과 <strong>멜론 바로 듣기 링크</strong>가 카카오톡으로 깔끔하게 정리되어 전송됩니다.
-        </p>
-      </div>
-    </section>
+
+        <!-- 탭 2: AI & PlayMCP 카카오맵 여행지·맛집 검색 -->
+        <div id="panelSearch" class="tab-panel" role="tabpanel" aria-labelledby="tabSearchBtn">
+          <h2 class="panel-heading">🔍 가고 싶은 지역이나 장소를 검색해 보세요!</h2>
+          <div class="search-box-card">
+            <div class="quick-search-chips">
+              <span class="chip-title">인기 질문:</span>
+              <button type="button" class="query-chip" onclick="quickSearchPlace('강릉 바다 보이는 걷기 좋은 곳')">#강릉 바다산책</button>
+              <button type="button" class="query-chip" onclick="quickSearchPlace('전주 한옥마을 맛집과 찻집')">#전주 한옥마을</button>
+              <button type="button" class="query-chip" onclick="quickSearchPlace('제주도 걷기 좋은 숲길과 해안')">#제주 힐링여행</button>
+              <button type="button" class="query-chip" onclick="quickSearchPlace('단양 온천과 구경시장 맛집')">#단양 온천여행</button>
+              <button type="button" class="query-chip" onclick="quickSearchPlace('부산 해변열차와 바닷가 산책')">#부산 해변열차</button>
+            </div>
+
+            <div class="search-input-group">
+              <input
+                type="text"
+                id="placeSearchInput"
+                class="search-input"
+                placeholder="예: 여수 바다 경치 좋은 곳, 속초 전통시장 맛집 추천해줘"
+                aria-label="여행지 또는 맛집 검색어 입력"
+                onkeydown="if(event.key==='Enter') executeAiPlaceSearch()"
+              />
+              <button type="button" class="voice-search-btn" id="voiceSearchBtn" onclick="startVoicePlaceSearch()">
+                🎙️ 말하기
+              </button>
+            </div>
+
+            <button type="button" class="search-submit-btn" onclick="executeAiPlaceSearch()">
+              🗺️ PlayMCP 카카오맵 비서에게 장소 찾아달라고 하기
+            </button>
+          </div>
+
+          <div id="searchStatusMsg" class="search-status-msg">
+            💡 지역 이름이나 먹고 싶은 음식을 검색하면, <strong>카카오맵</strong>에서 위치와 여행 팁을 찾아드립니다.
+          </div>
+
+          <div id="searchResultContainer" class="place-card-list"></div>
+        </div>
+
+        <!-- 탭 3: 내 별표 보물지도첩 (저장한 곳 + 직접 추가하기) -->
+        <div id="panelMyBook" class="tab-panel" role="tabpanel" aria-labelledby="tabMyBookBtn">
+          <div class="mybook-top-bar">
+            <h2 class="panel-heading">⭐ 내가 모아둔 별표 보물지도첩</h2>
+            <button type="button" class="share-all-katalk-btn" onclick="shareEntireBookToKakao()">
+              💛 내 보물지도 전체 목록 카톡으로 보내기
+            </button>
+          </div>
+
+          <!-- 내가 다녀온 좋은 곳 직접 추가하기 상자 -->
+          <details class="add-custom-place-box">
+            <summary class="add-place-summary">➕ 내가 다녀온 맛집 · 좋은 여행지 직접 적어 넣기 (클릭)</summary>
+            <div class="add-place-form">
+              <div class="form-row">
+                <label for="customPlaceName">장소 이름 (필수)</label>
+                <input type="text" id="customPlaceName" class="config-input" placeholder="예: 강릉 초당 할머니 순두부" />
+              </div>
+              <div class="form-row">
+                <label for="customPlaceRegion">지역 선택 또는 동네 입력</label>
+                <input type="text" id="customPlaceRegion" class="config-input" placeholder="예: 서울 종로구 / 강원도 강릉시 / 제주도" />
+              </div>
+              <div class="form-row">
+                <label for="customPlaceMemo">나만의 한 줄 메모</label>
+                <input type="text" id="customPlaceMemo" class="config-input" placeholder="예: 바닷가 산책 후에 먹었는데 고소하고 정말 맛있었음!" />
+              </div>
+              <button type="button" class="add-save-btn" onclick="addCustomPlaceToBook()">
+                ⭐ 내 보물지도첩에 새 별표로 등록하기
+              </button>
+            </div>
+          </details>
+
+          <!-- 저장된 별표 장소 카드 목록 -->
+          <div id="myBookListContainer" class="place-card-list"></div>
+        </div>
+
+      </section>
+    </div>
 
   </main>
 
-  <!-- 하단 안내 푸터 -->
-  <footer class="radio-footer">
-    <p>본 웹앱은 <strong>Kakao Developers</strong>와 <strong>Kakao PlayMCP (mcp/3)</strong>를 활용하여 제작된 반응형 웹앱입니다.</p>
+  <footer class="app-footer">
+    <p>본 웹앱은 <strong>Kakao Developers (카카오맵/공유 API)</strong> 및 <strong>Kakao PlayMCP (mcp/3)</strong> 기반으로 제작된 반응형 웹앱입니다.</p>
   </footer>
 
-  <!-- 알림 토스트 창 -->
+  <!-- 토스트 알림창 -->
   <div id="toastBox" class="toast-box hidden" role="status" aria-live="polite"></div>
 
-  <!-- 카카오톡 메시지 미리보기 & 전송 모달 (API 키 없을 때도 즉시 체험 가능!) -->
-  <div id="kakaoPreviewModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
-    <div class="modal-card kakao-preview-card">
+  <!-- 카카오톡 전송 미리보기 & 공유 모달 -->
+  <div id="kakaoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="kakaoModalTitle">
+    <div class="modal-card">
       <div class="modal-header">
-        <h2 id="previewModalTitle">💬 카카오톡 전송 미리보기</h2>
-        <button type="button" class="close-btn" onclick="closePreviewModal()">✕ 닫기</button>
+        <h2 id="kakaoModalTitle">💬 카카오톡 여행지·지도 전송 미리보기</h2>
+        <button type="button" class="close-btn" onclick="closeKakaoModal()">✕ 닫기</button>
       </div>
       <div class="modal-body">
-        <div class="katalk-room-sim">
-          <div class="katalk-date-chip">오늘의 음악 배달</div>
-          <div class="katalk-msg-card">
-            <div class="katalk-card-banner">📻 추억의 음악 다방 주크박스</div>
-            <div class="katalk-card-body" id="katalkPreviewContent"></div>
-            <div class="katalk-card-footer">
-              <span>Melon · PlayMCP</span>
-            </div>
+        <div class="katalk-sim-box">
+          <div class="katalk-sim-badge">오늘의 여행·나들이 안내장</div>
+          <div class="katalk-sim-card">
+            <div class="katalk-sim-header">🗺️ 나만의 카톡 보물지도첩</div>
+            <div class="katalk-sim-body" id="kakaoPreviewBody"></div>
+            <div class="katalk-sim-footer">Kakao Map · PlayMCP 길찾기 연동</div>
           </div>
         </div>
-        <div class="preview-actions">
-          <button type="button" class="copy-text-btn" onclick="copyPlaylistToClipboard()">
-            📋 카톡방에 붙여넣기용 글자 복사하기
+
+        <div class="modal-action-grid">
+          <button type="button" class="copy-btn" onclick="copyShareTextToClipboard()">
+            📋 카톡방 붙여넣기용 안내문 복사
           </button>
-          <button type="button" class="real-kakao-btn" onclick="triggerRealKakaoSend()">
+          <button type="button" class="real-send-btn" onclick="sendViaKakaoSdk()">
             💛 실제 카카오톡 앱으로 보내기
           </button>
         </div>
@@ -259,54 +431,38 @@
     </div>
   </div>
 
-  <!-- 카카오 디벨로퍼스 & PlayMCP 연결 설정 모달 -->
+  <!-- 카카오맵 & PlayMCP 열쇠 설정 모달 -->
   <div id="configModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="configModalTitle">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="configModalTitle">⚙️ 카카오 & PlayMCP 마법 열쇠 설정</h2>
+        <h2 id="configModalTitle">⚙️ 카카오 디벨로퍼스 & PlayMCP 연결 설정</h2>
         <button type="button" class="close-btn" onclick="closeConfigModal()">✕ 닫기</button>
       </div>
       <div class="modal-body">
-        <p class="modal-desc">
-          키를 아직 입력하지 않아도 <strong>기본 체험 모드</strong>로 모든 음악 추천과 카톡 미리보기를 사용하실 수 있습니다. 실제 내 카카오 계정과 연결하려면 아래 칸에 넣어주세요!
+        <p class="modal-guide-box">
+          ✅ <strong>카카오 JavaScript 키</strong>가 기본 탑재되어 있습니다!
         </p>
 
-        <div class="form-group">
-          <label for="kakaoJsKeyInput">1. 카카오 디벨로퍼스 JavaScript 키 (<code>developers.kakao.com</code>)</label>
-          <input
-            type="text"
-            id="kakaoJsKeyInput"
-            class="config-input"
-            value="2cc751d0de6a0e97b90181755f74c071"
-            placeholder="예: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
-          />
-          <small class="form-help">카카오 디벨로퍼스 &gt; 내 애플리케이션 &gt; 앱 키에서 'JavaScript 키'를 복사해 붙여넣으세요.</small>
+        <div class="form-row">
+          <label for="kakaoKeyInput">1. 카카오 디벨로퍼스 JavaScript 키 (<code>developers.kakao.com</code>)</label>
+          <input type="text" id="kakaoKeyInput" class="config-input" value="2cc751d0de6a0e97b90181755f74c071" />
+          <small class="help-text">내 애플리케이션 &gt; 앱 키의 'JavaScript 키'가 적용되어 있습니다.</small>
         </div>
 
-        <div class="form-group">
-          <label for="playMcpUrlInput">2. 카카오 PlayMCP 서버 주소 (<code>playmcp.kakao.com</code>)</label>
-          <input
-            type="url"
-            id="playMcpUrlInput"
-            class="config-input"
-            value="https://playmcp.kakao.com/mcp/3"
-          />
-          <small class="form-help">PlayMCP의 멜론/나와의 채팅방 도구함 원격 엔드포인트 주소입니다.</small>
+        <div class="form-row">
+          <label for="mcpEndpointInput">2. 카카오 PlayMCP 서버 주소 (<code>playmcp.kakao.com</code>)</label>
+          <input type="url" id="mcpEndpointInput" class="config-input" value="https://playmcp.kakao.com/mcp/3" />
+          <small class="help-text">카카오맵 장소 검색 및 나와의 채팅방 도구함 엔드포인트입니다.</small>
         </div>
 
-        <div class="form-group">
-          <label for="playMcpTokenInput">3. PlayMCP 인증 토큰 (선택 사항)</label>
-          <input
-            type="password"
-            id="playMcpTokenInput"
-            class="config-input"
-            placeholder="PlayMCP 연동 토큰이 있다면 입력해 주세요"
-          />
+        <div class="form-row">
+          <label for="mcpTokenInput">3. PlayMCP 인증 토큰 (선택 사항)</label>
+          <input type="password" id="mcpTokenInput" class="config-input" placeholder="토큰이 있는 경우 입력해 주세요" />
         </div>
 
-        <div class="modal-footer-btns">
-          <button type="button" class="save-config-btn" onclick="saveConfig()">💾 설정 저장하고 적용하기</button>
-        </div>
+        <button type="button" class="save-config-btn" onclick="saveMapAppConfig()">
+          💾 설정 저장하고 적용하기
+        </button>
       </div>
     </div>
   </div>
