@@ -5,7 +5,7 @@
    - 전국 팔도 8대 테마 · 45곳 + 지역별 실존 명소/맛집 스마트 검색 엔진
    ========================================================================== */
 
-const DEFAULT_KAKAO_JS_KEY = '2cc751d0de6a0e97b90181755f74c071';
+const DEFAULT_KAKAO_JS_KEY = '8cfedd32f1478e4dc67d8b1ca3fe1aad';
 
 // 1. 8대 테마 · 전국 45곳 추천 여행지 데이터베이스
 // (mapX, mapY는 대한민국 8도 정밀 지도 SVG 위 실제 지리적 위치 비율 %)
@@ -893,7 +893,7 @@ let realKakaoMarkers = [];
 let isShowingRealKakaoMap = false;
 
 let mapAppConfig = {
-  kakaoKey: localStorage.getItem('yumi_kakao_js_key') || DEFAULT_KAKAO_JS_KEY,
+  kakaoKey: localStorage.getItem('yumi_kakao_js_key_v2') || DEFAULT_KAKAO_JS_KEY,
   mcpEndpoint: localStorage.getItem('yumi_playmcp_url') || 'https://playmcp.kakao.com/mcp/3',
   mcpToken: localStorage.getItem('yumi_playmcp_token') || ''
 };
@@ -1729,7 +1729,7 @@ function saveMapAppConfig() {
     document.getElementById('mcpEndpointInput').value.trim() || 'https://playmcp.kakao.com/mcp/3';
   mapAppConfig.mcpToken = document.getElementById('mcpTokenInput').value.trim();
 
-  localStorage.setItem('yumi_kakao_js_key', mapAppConfig.kakaoKey);
+  localStorage.setItem('yumi_kakao_js_key_v2', mapAppConfig.kakaoKey);
   localStorage.setItem('yumi_playmcp_url', mapAppConfig.mcpEndpoint);
   localStorage.setItem('yumi_playmcp_token', mapAppConfig.mcpToken);
 
