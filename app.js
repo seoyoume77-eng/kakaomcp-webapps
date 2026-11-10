@@ -682,30 +682,17 @@ const TRAVEL_THEMES = {
   }
 };
 
-// AI 검색용 추가 실존 명소 & 맛집 데이터베이스 (어떤 키워드로 검색해도 실제 명소가 나오도록 구성)
+// AI 검색용 추가 실존 명소 & 지역 대표 맛집 데이터베이스 (지역 검색 시 오직 해당 지역만 정확히 추천!)
 const EXTRA_FAMOUS_PLACES = [
+  // ---- [강릉] ----
   {
     id: 'ex-gn-1',
-    name: '강릉 안목해변 커피거리',
-    kakaoQuery: '강릉 안목해변 커피거리',
-    region: '강원 강릉시',
-    category: '☕ 바다뷰 카페거리',
-    address: '강원특별자치도 강릉시 창해로14번길 20-1',
-    desc: '푸른 동해 바다 바로 앞에 로스터리 카페들이 줄지어 있는 강릉 대표 해변 산책 & 커피 명소입니다.',
-    seniorTip: '💡 해변 백사장 옆으로 평탄한 보도블록 산책로가 이어져 바다를 보며 걷기 좋습니다.',
-    lat: 37.7726,
-    lng: 128.9472,
-    mapX: 67,
-    mapY: 22
-  },
-  {
-    id: 'ex-gn-2',
-    name: '강릉 초당순두부마을',
+    name: '강릉 초당순두부마을 (전통 순두부 & 짬뽕순두부)',
     kakaoQuery: '강릉 초당순두부마을',
     region: '강원 강릉시',
-    category: '🍲 대표 미식거리',
+    category: '🍲 강릉 대표 맛집',
     address: '강원특별자치도 강릉시 초당순두부길 89',
-    desc: '바닷물로 간수한 고소하고 부드러운 전통 초당순두부와 순두부 젤라또를 맛볼 수 있는 강릉 대표 맛집 거리입니다.',
+    desc: '바닷물로 간수한 고소하고 부드러운 전통 초당순두부 정식과 얼큰한 짬뽕순두부, 순두부 젤라또가 유명한 강릉 1순위 미식 거리입니다.',
     seniorTip: '💡 경포호수와 허균·허난설헌 기념공원 솔숲 바로 옆이라 식사 전후 산책 코스로 완벽합니다.',
     lat: 37.7911,
     lng: 128.9145,
@@ -713,74 +700,238 @@ const EXTRA_FAMOUS_PLACES = [
     mapY: 21
   },
   {
-    id: 'ex-jj-1',
-    name: '전주 남부시장 & 한옥마을 전망대 카페거리',
-    kakaoQuery: '전주 남부시장',
-    region: '전북 전주시',
-    category: '🍲 전통시장·카페',
-    address: '전북특별자치도 전주시 완산구 풍남문2길 63',
-    desc: '전주 콩나물국밥, 피순대 등 정통 전주 미식과 한옥 지붕이 한눈에 내려다보이는 루프탑 전통 찻집 거리입니다.',
-    seniorTip: '💡 전주 한옥마을 경기전에서 도보 5분 거리로 이어져 함께 둘러보기 아주 편리합니다.',
-    lat: 35.8122,
-    lng: 127.1476,
-    mapX: 37,
-    mapY: 58
+    id: 'ex-gn-2',
+    name: '강릉 중앙시장 먹자골목 (감자옹심이 · 장칼국수 · 닭강정)',
+    kakaoQuery: '강릉중앙시장',
+    region: '강원 강릉시',
+    category: '🍲 강릉 전통시장 맛집',
+    address: '강원특별자치도 강릉시 금성로 21',
+    desc: '강릉 토속 음식인 쫄깃한 감자옹심이, 얼큰한 장칼국수, 배니닭강정, 수제 어묵고로케 등 강릉의 모든 맛집이 모인 중심 시장입니다.',
+    seniorTip: '💡 공영주차장이 잘 갖춰져 있고 비가림 아케이드 지붕 덕분에 날씨와 상관없이 편하게 맛집 투어를 할 수 있습니다.',
+    lat: 37.754,
+    lng: 128.8986,
+    mapX: 64,
+    mapY: 23
   },
   {
-    id: 'ex-jj-2',
-    name: '전주 덕진공원 연꽃 산책로 & 연화정도서관',
-    kakaoQuery: '전주 덕진공원',
+    id: 'ex-gn-3',
+    name: '강릉 안목해변 커피거리 & 해안 횟집 거리',
+    kakaoQuery: '강릉 안목해변 커피거리',
+    region: '강원 강릉시',
+    category: '☕ 강릉 오션뷰 카페·횟집',
+    address: '강원특별자치도 강릉시 창해로14번길 20-1',
+    desc: '푸른 동해 바다 바로 앞에 통유리 오션뷰 카페들과 신선한 활어회·해물찜 식당들이 줄지어 있는 강릉 대표 해변 거리입니다.',
+    seniorTip: '💡 해변 백사장 옆으로 평탄한 산책로가 이어져 식사 후 바다를 보며 커피 한잔하기 최고입니다.',
+    lat: 37.7726,
+    lng: 128.9472,
+    mapX: 68,
+    mapY: 22
+  },
+  {
+    id: 'ex-gn-4',
+    name: '강릉 경포해변 & 사천 물회 마을',
+    kakaoQuery: '강릉 사천항 물회',
+    region: '강원 강릉시',
+    category: '🍲 강릉 해산물 맛집',
+    address: '강원특별자치도 강릉시 사천면 진리항구길 47',
+    desc: '동해안에서 갓 잡은 싱싱한 가자미·오징어로 만든 시원한 강릉식 물회와 섭국, 전복죽으로 유명한 해안 미식 명소입니다.',
+    seniorTip: '💡 항구 바로 앞 무료 주차장이 넓고 경포호수 산책길과 차로 5분 거리입니다.',
+    lat: 37.8412,
+    lng: 128.8765,
+    mapX: 65,
+    mapY: 18
+  },
+
+  // ---- [전주] ----
+  {
+    id: 'ex-jj-1',
+    name: '전주 한옥마을 전주비빔밥 & 떡갈비 골목',
+    kakaoQuery: '전주한옥마을 비빔밥 맛집',
     region: '전북 전주시',
-    category: '🌸 호수·한옥도서관',
-    address: '전북특별자치도 전주시 덕진구 권삼득로 390',
-    desc: '넓은 호수 위를 가로지르는 연화교와 물 위에 떠 있는 아름다운 한옥 도서관(연화정도서관)이 있는 산책 명소입니다.',
-    seniorTip: '💡 호수 위 다리와 도서관 내부가 모두 평지로 연결되어 사진 찍기와 휴식에 최고입니다.',
-    lat: 35.8475,
-    lng: 127.1223,
-    mapX: 35,
+    category: '🍲 전주 대표 맛집',
+    address: '전북특별자치도 전주시 완산구 어진길 119',
+    desc: '놋그릇에 정갈하게 담아낸 정통 전주 육회비빔밥과 숯불 향 가득한 한우 떡갈비를 맛볼 수 있는 한옥마을 중심 미식 골목입니다.',
+    seniorTip: '💡 경기전 바로 옆 평지 골목에 위치해 식사 후 한옥마을 산책으로 바로 이어집니다.',
+    lat: 35.8165,
+    lng: 127.1512,
+    mapX: 36,
     mapY: 56
   },
   {
+    id: 'ex-jj-2',
+    name: '전주 남부시장 콩나물국밥 & 한옥 전망대 카페거리',
+    kakaoQuery: '전주 남부시장 콩나물국밥',
+    region: '전북 전주시',
+    category: '🍲 전주 전통시장·찻집',
+    address: '전북특별자치도 전주시 완산구 풍남문2길 63',
+    desc: '시원하고 개운한 전주 남부시장식 콩나물국밥과 한옥 기와지붕이 한눈에 내려다보이는 전통 찻집·루프탑 카페 거리입니다.',
+    seniorTip: '💡 전주 한옥마을에서 도보 5분 거리이며 천변 산책로와 함께 둘러보기 좋습니다.',
+    lat: 35.8122,
+    lng: 127.1476,
+    mapX: 38,
+    mapY: 58
+  },
+  {
+    id: 'ex-jj-3',
+    name: '전주 덕진공원 연꽃 산책로 & 연화정도서관',
+    kakaoQuery: '전주 덕진공원',
+    region: '전북 전주시',
+    category: '🌸 전주 호수·한옥도서관',
+    address: '전북특별자치도 전주시 덕진구 권삼득로 390',
+    desc: '넓은 호수 위를 가로지르는 연화교와 물 위에 떠 있는 아름다운 한옥 도서관(연화정도서관)이 있는 전주 대표 명소입니다.',
+    seniorTip: '💡 호수 위 다리와 도서관 내부가 모두 평지로 연결되어 사진 찍기와 휴식에 최고입니다.',
+    lat: 35.8475,
+    lng: 127.1223,
+    mapX: 34,
+    mapY: 55
+  },
+
+  // ---- [여수] ----
+  {
     id: 'ex-ys-1',
+    name: '여수 이순신광장 게장백반 골목 & 낭만포차거리',
+    kakaoQuery: '여수 게장백반거리',
+    region: '전남 여수시',
+    category: '🍲 여수 대표 맛집',
+    address: '전라남도 여수시 봉산남4길 23-26',
+    desc: '감칠맛 나는 여수 돌게장 백반, 갈치조림, 서대회무침과 바닷가 이순신광장의 딸기모찌·해풍쑥 아이스크림을 즐기는 미식 코스입니다.',
+    seniorTip: '💡 식당들이 한 골목에 모여 있고 오동도·여수 해상케이블카와 차로 5~10분 거리입니다.',
+    lat: 34.7352,
+    lng: 127.7261,
+    mapX: 46,
+    mapY: 74
+  },
+  {
+    id: 'ex-ys-2',
     name: '여수 해상케이블카 & 돌산공원 전망대',
     kakaoQuery: '여수해상케이블카 돌산탑승장',
     region: '전남 여수시',
-    category: '🌊 바다 전망·야경',
+    category: '🌊 여수 바다 전망·야경',
     address: '전라남도 여수시 돌산읍 돌산로 3600-1',
     desc: '바다 위를 건너 돌산도와 자산공원을 잇는 해상케이블카로, 여수 밤바다 야경과 다도해 일몰이 아름답습니다.',
     seniorTip: '💡 오동도 및 이순신광장 먹거리 골목과 가까워 여수 여행 핵심 코스로 꼽힙니다.',
     lat: 34.7289,
     lng: 127.7425,
-    mapX: 47,
-    mapY: 74
+    mapX: 49,
+    mapY: 75
   },
-  {
-    id: 'ex-jeju-1',
-    name: '제주 카멜리아힐 & 애월 한담해안산책로',
-    kakaoQuery: '제주 한담해안산책로',
-    region: '제주 제주시',
-    category: '🏝️ 제주 해안·수목원',
-    address: '제주특별자치도 제주시 애월읍 곽지리 1359',
-    desc: '에메랄드빛 애월 바다를 따라 구불구불 이어지는 평탄한 해안 산책로와 오션뷰 카페거리입니다.',
-    seniorTip: '💡 해안 바로 옆을 따라 포장된 보행 전용 산책로라 파도 소리를 들으며 걷기 좋습니다.',
-    lat: 33.4589,
-    lng: 126.3105,
-    mapX: 29,
-    mapY: 92
-  },
+
+  // ---- [부산] ----
   {
     id: 'ex-bs-1',
-    name: '부산 광안리 해변 & 해동용궁사',
+    name: '부산 자갈치시장 & 남포동 국제시장 먹자골목',
+    kakaoQuery: '부산 자갈치시장',
+    region: '부산 중구',
+    category: '🍲 부산 대표 맛집',
+    address: '부산광역시 중구 자갈치해안로 52',
+    desc: '싱싱한 생선회와 꼼장어구이, 부산 돼지국밥, 밀면, 씨앗호떡까지 부산의 대표 별미를 한자리에서 맛보는 미식 명소입니다.',
+    seniorTip: '💡 지하철 자갈치역·남포역 바로 앞이며, 자갈치 현대화 건물 엘리베이터와 바다 전망대가 편리합니다.',
+    lat: 35.0966,
+    lng: 129.0306,
+    mapX: 70,
+    mapY: 69
+  },
+  {
+    id: 'ex-bs-2',
+    name: '부산 해동용궁사 & 기장 연화리 해녀촌 맛집',
     kakaoQuery: '부산 해동용궁사',
     region: '부산 기장군',
-    category: '🌊 바다 사찰·해변',
+    category: '🌊 부산 바다사찰·맛집',
     address: '부산광역시 기장군 기장읍 용궁길 86',
-    desc: '푸른 동해 바다 기암절벽 위에 세워진 아름다운 해안 사찰로, 파도 소리와 함께 탁 트인 바다 전망을 선사합니다.',
+    desc: '푸른 동해 바다 절벽 위의 아름다운 해동용궁사와 바로 근처 기장 연화리의 고소한 전복죽·해산물 모둠 맛집 코스입니다.',
     seniorTip: '💡 해운대 블루라인파크 송정역에서 가까워 해변열차 코스와 함께 둘러보기 좋습니다.',
     lat: 35.1884,
     lng: 129.2233,
     mapX: 74,
     mapY: 66
+  },
+
+  // ---- [제주] ----
+  {
+    id: 'ex-jeju-1',
+    name: '제주 동문재래시장 & 흑돼지·갈치조림 맛집 거리',
+    kakaoQuery: '제주동문시장',
+    region: '제주 제주시',
+    category: '🍲 제주 대표 맛집',
+    address: '제주특별자치도 제주시 관덕로14길 20',
+    desc: '제주 은갈치조림, 고기국수, 흑돼지 구이, 오메기떡, 천혜향 주스 등 제주의 산해진미가 모두 모인 대표 시장입니다.',
+    seniorTip: '💡 제주공항에서 차로 15분 거리이며 대형 주차 빌딩과 평지 아케이드 통로가 잘 갖춰져 있습니다.',
+    lat: 33.5127,
+    lng: 126.5282,
+    mapX: 31,
+    mapY: 90
+  },
+  {
+    id: 'ex-jeju-2',
+    name: '제주 애월 한담해안산책로 & 오션뷰 카페거리',
+    kakaoQuery: '제주 한담해안산책로',
+    region: '제주 제주시',
+    category: '🏝️ 제주 해안·카페',
+    address: '제주특별자치도 제주시 애월읍 곽지리 1359',
+    desc: '에메랄드빛 애월 바다를 따라 구불구불 이어지는 평탄한 해안 산책로와 해물라면·전복김밥 맛집, 오션뷰 카페거리입니다.',
+    seniorTip: '💡 해안 바로 옆을 따라 포장된 보행 전용 산책로라 파도 소리를 들으며 걷기 좋습니다.',
+    lat: 33.4589,
+    lng: 126.3105,
+    mapX: 28,
+    mapY: 92
+  },
+
+  // ---- [속초 / 춘천 / 경주 / 단양] ----
+  {
+    id: 'ex-sc-1',
+    name: '속초 영금정 해안전망대 & 동명항 물회·대게 거리',
+    kakaoQuery: '속초 영금정',
+    region: '강원 속초시',
+    category: '🌊 속초 전망·맛집',
+    address: '강원특별자치도 속초시 영금정로 43',
+    desc: '엘리베이터를 타고 바다 위 정자(영금정)에 올라 동해 절경을 감상하고, 바로 옆 항구에서 물회와 대게, 생선구이를 맛봅니다.',
+    seniorTip: '💡 계단 대신 무료 전망 엘리베이터가 설치되어 있어 누구나 편하게 바다 위 구름다리를 건널 수 있습니다.',
+    lat: 38.2124,
+    lng: 128.5992,
+    mapX: 63,
+    mapY: 12
+  },
+  {
+    id: 'ex-cc-1',
+    name: '춘천 명동 닭갈비골목 & 막국수 맛집 거리',
+    kakaoQuery: '춘천명동닭갈비골목',
+    region: '강원 춘천시',
+    category: '🍲 춘천 대표 맛집',
+    address: '강원특별자치도 춘천시 금강로62번길 12',
+    desc: '춘천 여행에 빠질 수 없는 원조 철판·숯불 닭갈비와 향긋한 메밀 막국수를 맛볼 수 있는 대표 미식 골목입니다.',
+    seniorTip: '💡 경춘선 춘천역·남춘천역에서 가까우며 식사 후 공지천이나 삼악산 케이블카로 이동하기 편리합니다.',
+    lat: 37.8794,
+    lng: 127.7282,
+    mapX: 49,
+    mapY: 20
+  },
+  {
+    id: 'ex-gj-1',
+    name: '경주 황리단길 맛집 & 경주 쌈밥·한정식 거리',
+    kakaoQuery: '경주 황리단길 맛집',
+    region: '경북 경주시',
+    category: '🍲 경주 대표 맛집',
+    address: '경상북도 경주시 포석로 1080',
+    desc: '대릉원 돌담길 옆으로 푸짐한 경주 한우 떡갈비, 연잎 쌈밥 한정식, 황남빵, 십원빵과 한옥 카페가 이어진 명소입니다.',
+    seniorTip: '💡 거리 전체가 평지이고 대릉원·첨성대 산책 코스와 바로 맞닿아 있습니다.',
+    lat: 35.8375,
+    lng: 129.2097,
+    mapX: 70,
+    mapY: 56
+  },
+  {
+    id: 'ex-dy-1',
+    name: '단양 도담삼봉 유람선 & 마늘 떡갈비 한정식 거리',
+    kakaoQuery: '단양 도담삼봉',
+    region: '충북 단양군',
+    category: '🌊 단양 명승·맛집',
+    address: '충청북도 단양군 매포읍 삼봉로 644',
+    desc: '남한강 한가운데 솟은 도담삼봉 절경을 유람선과 평지 광장에서 감상하고, 단양 명물 마늘 떡갈비·쏘가리매운탕을 즐깁니다.',
+    seniorTip: '💡 주차장에서 전망대까지 평지로 바로 연결되어 걸음 부담 없이 절경을 감상할 수 있습니다.',
+    lat: 37.0014,
+    lng: 128.3431,
+    mapX: 55,
+    mapY: 36
   }
 ];
 
@@ -900,6 +1051,14 @@ let mapAppConfig = {
 
 // 초기 실행
 window.addEventListener('DOMContentLoaded', () => {
+  // 만약 카카오톡 공유 카드의 [카카오맵 길찾기] 버튼으로 접속(?goMap=장소명)했다면 즉시 카카오맵으로 이동
+  const urlParams = new URLSearchParams(window.location.search);
+  const goMapQuery = urlParams.get('goMap');
+  if (goMapQuery) {
+    window.location.replace(`https://map.kakao.com/link/search/${encodeURIComponent(goMapQuery)}`);
+    return;
+  }
+
   initKakaoServices();
   updateSavedCountBadge();
   selectTravelTheme('flower');
@@ -1304,18 +1463,27 @@ async function callPlayMcpKakaoMap(query) {
   return null;
 }
 
-// 스마트 키워드 분석 및 전국 명소 매칭 엔진
+// 스마트 키워드 분석 및 전국 명소 매칭 엔진 (지역 검색 시 100% 해당 지역만 반환!)
 function buildSmartPlaceSearchResults(query) {
-  // 1) 전체 52곳의 실존 명소 풀 생성
+  // 1) 전체 실존 명소 풀 생성
   const allPlaces = [];
   Object.values(TRAVEL_THEMES).forEach((theme) => {
     theme.places.forEach((p) => allPlaces.push(p));
   });
   EXTRA_FAMOUS_PLACES.forEach((p) => allPlaces.push(p));
 
-  // 2) 불용어("추천해줘", "어디", "좋은", "곳" 등)를 제거하고 핵심 키워드 토큰만 추출
+  // 2) 알려진 모든 지역 키워드 목록
+  const knownRegionKeywords = [];
+  REGION_COORD_MAP.forEach((group) => {
+    group.keywords.forEach((kw) => knownRegionKeywords.push(kw));
+  });
+
+  // 3) 사용자 검색어 안에 특정 지역명(예: "강릉", "전주", "부산", "제주" 등)이 들어있는지 먼저 확인!
+  const detectedRegions = knownRegionKeywords.filter((rk) => query.includes(rk));
+
+  // 4) 불용어 제거 후 핵심 키워드 토큰 추출
   const stopWords = [
-    '추천해줘', '추천해달라고', '추천해주세요', '추천', '찾아줘', '알려줘', '보여줘',
+    '추천해줘', '추천해달라고', '추천해주세요', '추천해', '추천', '찾아줘', '알려줘', '보여줘',
     '어디가', '어디', '좋을까', '갈만한', '갈만한곳', '가고싶어', '보이는', '걷기',
     '좋은', '곳', '여행지', '여행', '코스', '나들이', '근처', '주변', '에서', '과', '와', '이랑'
   ];
@@ -1330,30 +1498,38 @@ function buildSmartPlaceSearchResults(query) {
     .map((t) => t.trim().toLowerCase())
     .filter((t) => t.length >= 2);
 
-  // 테마 별칭 매핑 (예: "바다" -> sea/island, "맛집" -> market, "꽃" -> flower, "숲" -> hanok/spa)
-  const scored = allPlaces.map((place) => {
-    let score = 0;
+  // 5) 만약 지역명(예: "강릉")이 감지되었다면, 다른 지역(속초, 단양, 서울 등)은 절대 섞이지 않도록 100% 해당 지역 장소만 필터링!
+  let candidatePool = allPlaces;
+  if (detectedRegions.length > 0) {
+    candidatePool = allPlaces.filter((place) =>
+      detectedRegions.some(
+        (rk) => place.region.includes(rk) || place.name.includes(rk) || place.address.includes(rk)
+      )
+    );
+  }
+
+  // 6) 후보군 안에서 키워드(맛집, 바다, 카페, 한옥, 숲 등) 점수 계산
+  const wantsFood = query.includes('맛집') || query.includes('먹거리') || query.includes('시장') || query.includes('식당');
+  const wantsCafe = query.includes('카페') || query.includes('커피') || query.includes('찻집');
+
+  const scored = candidatePool.map((place) => {
+    let score = detectedRegions.length > 0 ? 10 : 0; // 지역이 이미 일치하면 기본 10점 부여
     const targetText = `${place.name} ${place.region} ${place.category} ${place.desc} ${place.address} ${place.seniorTip}`.toLowerCase();
 
     tokens.forEach((tk) => {
       if (place.region.toLowerCase().includes(tk) || place.name.toLowerCase().includes(tk)) {
-        score += 5; // 지역명·장소명 일치 시 높은 점수
+        score += 6;
       } else if (targetText.includes(tk)) {
-        score += 2; // 설명·카테고리 일치
-      }
-      if ((tk.includes('맛집') || tk.includes('시장') || tk.includes('먹거리')) && place.category.includes('미식')) {
         score += 3;
-      }
-      if ((tk.includes('카페') || tk.includes('찻집')) && (targetText.includes('카페') || targetText.includes('찻집'))) {
-        score += 3;
-      }
-      if (tk.includes('바다') && (place.category.includes('바다') || place.category.includes('섬'))) {
-        score += 3;
-      }
-      if ((tk.includes('숲') || tk.includes('산책') || tk.includes('힐링')) && (targetText.includes('숲') || targetText.includes('산책'))) {
-        score += 2;
       }
     });
+
+    if (wantsFood && (place.category.includes('맛집') || place.category.includes('미식') || place.desc.includes('맛집') || place.desc.includes('순두부') || place.desc.includes('시장'))) {
+      score += 8;
+    }
+    if (wantsCafe && (place.category.includes('카페') || place.name.includes('커피') || place.desc.includes('카페'))) {
+      score += 8;
+    }
 
     return { place, score };
   });
@@ -1363,35 +1539,34 @@ function buildSmartPlaceSearchResults(query) {
     .sort((a, b) => b.score - a.score)
     .map((item) => item.place);
 
-  // 3) 만약 사용자가 그냥 "추천해줘", "여행지 추천"처럼 지역 없이 입력했다면:
-  //    매번 다른 전국 팔도 대표 명소 4곳을 랜덤으로 골라 추천! (절대 한 곳만 고정되지 않음)
-  if (tokens.length === 0) {
+  // 7) 지역 없이 그냥 "추천해줘"라고만 입력한 경우: 전국 명소 중 4곳을 랜덤 추천
+  if (tokens.length === 0 && detectedRegions.length === 0) {
     const shuffled = [...allPlaces].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 4);
   }
 
-  // 4) 매칭된 실존 명소가 2곳 이상이면 상위 4곳을 바로 반환
-  if (matched.length >= 2) {
+  // 8) 해당 지역의 매칭된 실존 명소가 충분하면 바로 반환 (오직 그 지역만!)
+  if (matched.length >= 3) {
     return matched.slice(0, 4);
   }
 
-  // 5) 우리 DB에 없는 세부 동네/키워드(예: "성수동 브런치", "대전 성심당")를 검색했을 때:
-  //    해당 지역의 정확한 지도 좌표에 핀을 꽂고, 카카오맵에서 그 키워드로 바로 검색되도록 연결!
-  const keywordLabel = tokens.join(' ') || query.trim();
-  const pos1 = inferKoreaMapPosition(keywordLabel, 0);
-  const pos2 = inferKoreaMapPosition(keywordLabel, 1);
-  const pos3 = inferKoreaMapPosition(keywordLabel, 2);
+  // 9) 해당 지역의 매칭 결과가 1~2개뿐이거나 새로운 동네를 검색한 경우,
+  //    부족한 개수는 무조건 "그 지역(keywordLabel)"의 카카오맵 맞춤 코스로만 채워서 타 지역이 섞이지 않게 보장!
+  const regionLabel = detectedRegions[0] || tokens[0] || query.trim();
+  const pos1 = inferKoreaMapPosition(regionLabel, 0);
+  const pos2 = inferKoreaMapPosition(regionLabel, 1);
+  const pos3 = inferKoreaMapPosition(regionLabel, 2);
 
-  const customResults = [
+  const regionSpecificExtras = [
     {
       id: `srch-${Date.now()}-1`,
-      name: `${keywordLabel} 인기 명소`,
-      kakaoQuery: `${keywordLabel} 가볼만한곳`,
-      region: keywordLabel,
-      category: '🔍 카카오맵 맞춤 추천',
-      address: `${keywordLabel} 대표 관광·산책 코스`,
-      desc: `"${keywordLabel}" 주변에서 방문객 평점이 높고 산책하기 좋은 대표 명소입니다.`,
-      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${keywordLabel} 가볼만한곳" 실제 목록과 위치를 바로 보여줍니다.`,
+      name: `${regionLabel} 현지인 추천 베스트 맛집 거리`,
+      kakaoQuery: `${regionLabel} 맛집`,
+      region: regionLabel,
+      category: `🍲 ${regionLabel} 대표 맛집`,
+      address: `${regionLabel} 중심 미식 거리`,
+      desc: `"${regionLabel}"에서 방문객 평점과 리뷰가 가장 좋은 대표 맛집 모음입니다.`,
+      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${regionLabel} 맛집" 실제 식당 목록과 위치를 바로 보여줍니다.`,
       lat: pos1.lat,
       lng: pos1.lng,
       mapX: pos1.mapX,
@@ -1399,13 +1574,13 @@ function buildSmartPlaceSearchResults(query) {
     },
     {
       id: `srch-${Date.now()}-2`,
-      name: `${keywordLabel} 대표 맛집 거리`,
-      kakaoQuery: `${keywordLabel} 맛집`,
-      region: keywordLabel,
-      category: '🍲 카카오맵 맛집 검색',
-      address: `${keywordLabel} 인기 식도락 거리`,
-      desc: `"${keywordLabel}" 현지인과 여행객들이 자주 찾는 대표 맛집 거리입니다.`,
-      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${keywordLabel} 맛집" 실제 식당 위치를 바로 확인하실 수 있습니다.`,
+      name: `${regionLabel} 전망 좋은 인기 카페 & 디저트`,
+      kakaoQuery: `${regionLabel} 카페`,
+      region: regionLabel,
+      category: `☕ ${regionLabel} 인기 카페`,
+      address: `${regionLabel} 감성 카페 거리`,
+      desc: `식사 후 여유롭게 커피와 디저트를 즐기기 좋은 "${regionLabel}" 대표 카페 코스입니다.`,
+      seniorTip: `💡 [🗺️ 카카오맵 길찾기]를 누르면 카카오맵에서 "${regionLabel} 카페" 인기 매장을 바로 확인하실 수 있습니다.`,
       lat: pos2.lat,
       lng: pos2.lng,
       mapX: pos2.mapX,
@@ -1413,13 +1588,13 @@ function buildSmartPlaceSearchResults(query) {
     },
     {
       id: `srch-${Date.now()}-3`,
-      name: `${keywordLabel} 분위기 좋은 카페`,
-      kakaoQuery: `${keywordLabel} 카페`,
-      region: keywordLabel,
-      category: '☕ 카카오맵 카페 검색',
-      address: `${keywordLabel} 전망·감성 카페`,
-      desc: `여행 중 여유롭게 차 한잔하며 쉬어가기 좋은 "${keywordLabel}" 인기 카페 코스입니다.`,
-      seniorTip: `💡 [⭐ 내 지도첩에 별표 저장]을 눌러두시면 언제든 카톡으로 친구들과 공유하실 수 있습니다.`,
+      name: `${regionLabel} 가볼만한 대표 산책 명소`,
+      kakaoQuery: `${regionLabel} 가볼만한곳`,
+      region: regionLabel,
+      category: `📍 ${regionLabel} 추천 코S`,
+      address: `${regionLabel} 대표 관광 명소`,
+      desc: `"${regionLabel}" 여행에서 빠질 수 없는 아름다운 풍경과 산책 코스입니다.`,
+      seniorTip: `💡 [⭐ 내 지도첩에 별표 저장]을 눌러두시면 카카오톡으로 친구들과 코스를 공유하실 수 있습니다.`,
       lat: pos3.lat,
       lng: pos3.lng,
       mapX: pos3.mapX,
@@ -1427,7 +1602,12 @@ function buildSmartPlaceSearchResults(query) {
     }
   ];
 
-  return matched.length === 1 ? [matched[0], ...customResults.slice(0, 2)] : customResults;
+  const combined = [...matched];
+  for (const extra of regionSpecificExtras) {
+    if (combined.length >= 4) break;
+    combined.push(extra);
+  }
+  return combined;
 }
 
 // 음성으로 여행지 검색하기
@@ -1671,41 +1851,79 @@ async function sendViaKakaoSdk() {
 
   const first = currentSharePayload.places[0];
   const q = first.kakaoQuery || first.name;
-  const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(q)}`;
+  const directKakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(q)}`;
 
-  if (window.Kakao && window.Kakao.isInitialized()) {
-    const descText = currentSharePayload.places
-      .slice(0, 3)
-      .map((p, i) => `${i + 1}. ${p.name} (${p.region})`)
-      .join('\n');
+  // 중요: 카카오 디벨로퍼스 정책상 link.webUrl은 반드시 [내 애플리케이션 > 플랫폼 > Web]에 등록된 내 사이트 도메인이어야 합니다!
+  // 따라서 내 웹앱 주소(?goMap=장소명)를 링크로 걸고, 클릭 시 카카오맵으로 자동 이동하도록 처리합니다.
+  const baseAppUrl = window.location.protocol.startsWith('http')
+    ? `${window.location.origin}${window.location.pathname}`
+    : 'https://kakaomcp-ashen.vercel.app/';
+  const redirectMapUrl = `${baseAppUrl}?goMap=${encodeURIComponent(q)}`;
 
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: currentSharePayload.title,
-        description: descText,
-        imageUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png',
-        link: {
-          mobileWebUrl: kakaoMapUrl,
-          webUrl: kakaoMapUrl
-        }
-      },
-      buttons: [
-        {
-          title: '🗺️ 카카오맵으로 길찾기',
+  const descText = currentSharePayload.places
+    .slice(0, 3)
+    .map((p, i) => `${i + 1}. ${p.name} (${p.region})`)
+    .join(' / ');
+
+  // 1) Kakao JS SDK를 통한 공식 카카오톡 공유 창 호출
+  if (window.Kakao && window.location.protocol.startsWith('http')) {
+    try {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(mapAppConfig.kakaoKey || DEFAULT_KAKAO_JS_KEY);
+      }
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: currentSharePayload.title,
+          description: `${descText}\n📍 ${first.address || first.region}`,
+          imageUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png',
           link: {
-            mobileWebUrl: kakaoMapUrl,
-            webUrl: kakaoMapUrl
+            mobileWebUrl: redirectMapUrl,
+            webUrl: redirectMapUrl
           }
-        }
-      ]
-    });
-    return;
+        },
+        buttons: [
+          {
+            title: '🗺️ 카카오맵 위치·길찾기',
+            link: {
+              mobileWebUrl: redirectMapUrl,
+              webUrl: redirectMapUrl
+            }
+          },
+          {
+            title: '⭐ 보물지도첩 열기',
+            link: {
+              mobileWebUrl: baseAppUrl,
+              webUrl: baseAppUrl
+            }
+          }
+        ]
+      });
+      showToast('💛 카카오톡 공유 창을 열었습니다! (창이 안 뜨면 카카오 디벨로퍼스에 도메인을 등록해 주세요)');
+      return;
+    } catch (err) {
+      console.warn('Kakao.Share 호출 오류, 시스템 공유로 전환합니다:', err);
+    }
   }
 
+  // 2) 스마트폰/윈도우 기본 공유 창(navigator.share) 지원 시 즉시 실행
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: currentSharePayload.title,
+        text: `${currentSharePayload.title}\n${descText}\n📍 카카오맵 길찾기:`,
+        url: directKakaoMapUrl
+      });
+      return;
+    } catch (e) {
+      // 사용자가 공유 창을 닫은 경우
+    }
+  }
+
+  // 3) 클립보드 복사 폴백
   await copyShareTextToClipboard();
   closeKakaoModal();
-  showToast('💡 안내문을 복사했습니다! 카카오톡 대화창에 바로 붙여넣어 보내실 수 있습니다.');
+  showToast('💡 안내문과 카카오맵 링크를 복사했습니다! 카카오톡 대화창에 붙여넣어 보내실 수 있습니다.');
 }
 
 // ==========================================================================

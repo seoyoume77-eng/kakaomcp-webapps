@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayMCP 멜론 AI 뮤직 라운지 & 카톡 주크박스</title>
+  <!-- 웹폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- 카카오 디벨로퍼스 공식 JavaScript SDK -->
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="font-normal">
+
+  <!-- 상단 글씨 크기 조절 & 과제 전환 & 카카오 설정 바 -->
+  <header class="top-utility-bar" aria-label="화면 및 연결 설정">
+    <div class="utility-inner">
+      <div class="font-controls" role="group" aria-label="글씨 크기 조절">
+        <span class="utility-label">🔍 글씨 크기:</span>
+        <button type="button" class="size-btn active" data-size="normal" onclick="setFontSize('normal')">보통</button>
+        <button type="button" class="size-btn" data-size="large" onclick="setFontSize('large')">크게</button>
+        <button type="button" class="size-btn" data-size="xlarge" onclick="setFontSize('xlarge')">아주 크게</button>
+      </div>
+      <div class="connection-controls">
+        <a href="../index.html" class="switch-app-btn">🗺️ 여행지 추천 웹앱 (과제 1) 보러가기</a>
+        <button type="button" class="config-btn" id="openConfigBtn" onclick="openConfigModal()">
+          ⚙️ 카카오 · PlayMCP 설정
+          <span class="status-dot connected" id="connectionDot" title="연결 상태"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 주크박스 컨테이너 -->
+  <main class="radio-container">
+
+    <!-- 상단 헤더 영역 -->
+    <section class="radio-header">
+      <div class="speaker-grille" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="station-badge">ON AIR · PlayMCP x Melon x Kakao</div>
+      <h1 class="radio-title">🎧 AI 뮤직 라운지 & 카톡 주크박스</h1>
+      <p class="radio-subtitle">
+        원하는 장르나 오늘의 기분을 골라보세요! <strong>멜론(Melon)</strong> 맞춤 플레이리스트를 찾고 <strong>카카오톡</strong>으로 공유해 드립니다.
+      </p>
+    </section>
+
+    <!-- 3가지 큰 서랍(탭) 전환 버튼 -->
+    <nav class="channel-tabs" role="tablist" aria-label="선곡 방식 선택">
+      <button type="button" role="tab" aria-selected="true" class="tab-btn active" id="tabGenreBtn" onclick="switchTab('genre')">
+        🎼 장르별 채널 (10종)
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="tab-btn" id="tabMoodBtn" onclick="switchTab('mood')">
+        🌤️ 상황·기분별 채널 (6종)
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="tab-btn" id="tabRequestBtn" onclick="switchTab('request')">
+        🎙️ AI DJ 맞춤 신청곡
+      </button>
+    </nav>
+
+    <!-- 탭 1: 장르별 채널 (10가지) -->
+    <section id="panelGenre" class="tab-panel active" role="tabpanel" aria-labelledby="tabGenreBtn">
+      <h2 class="section-guide">👇 듣고 싶은 음악 장르를 선택해 보세요 (10가지 채널)</h2>
+      <div class="channel-grid">
+        <button type="button" class="channel-card" data-channel="kpop" onclick="selectChannel('kpop')">
+          <span class="channel-icon">🎤</span>
+          <strong class="channel-name">K-POP & 멜론 인기차트</strong>
+          <span class="channel-desc">아이유, 데이식스, 뉴진스, 에스파, 세븐틴</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="ballad" onclick="selectChannel('ballad')">
+          <span class="channel-icon">🎹</span>
+          <strong class="channel-name">감성 발라드 & 명품 보컬</strong>
+          <span class="channel-desc">성시경, 폴킴, 박효신, 멜로망스, 다비치</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="indie" onclick="selectChannel('indie')">
+          <span class="channel-icon">🎸</span>
+          <strong class="channel-name">인디 & 어쿠스틱 밴드</strong>
+          <span class="channel-desc">잔나비, 10CM, 악뮤(AKMU), 혁오, 루시</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="hiphop" onclick="selectChannel('hiphop')">
+          <span class="channel-icon">🎧</span>
+          <strong class="channel-name">트렌디 힙합 & 그루비 R&B</strong>
+          <span class="channel-desc">크러쉬, 지코, 딘(DEAN), 헤이즈, 백예린</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="pop" onclick="selectChannel('pop')">
+          <span class="channel-icon">📻</span>
+          <strong class="channel-name">글로벌 POP & 빌보드 명곡</strong>
+          <span class="channel-desc">브루노 마스, 테일러 스위프트, 콜드플레이, 마룬5</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="ost" onclick="selectChannel('ost')">
+          <span class="channel-icon">🎬</span>
+          <strong class="channel-name">드라마 & 영화 명작 OST</strong>
+          <span class="channel-desc">선재 업고 튀어, 슬기로운 의사생활, 비긴 어게인, 라라랜드</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="jazz" onclick="selectChannel('jazz')">
+          <span class="channel-icon">☕</span>
+          <strong class="channel-name">카페 재즈 & 로파이(Lo-Fi)</strong>
+          <span class="channel-desc">쳇 베이커, 빌 에반스, 보사노바, 감성 카페 BGM</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="classic" onclick="selectChannel('classic')">
+          <span class="channel-icon">🎻</span>
+          <strong class="channel-name">클래식 & 피아노 연주곡</strong>
+          <span class="channel-desc">히사이시 조, 이루마, 쇼팽 녹턴, 비발디 사계</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="retro" onclick="selectChannel('retro')">
+          <span class="channel-icon">🕺</span>
+          <strong class="channel-name">7080 · 8090 레트로 명곡</strong>
+          <span class="channel-desc">이문세, 조용필, 김광석, 산울림, 무한궤도</span>
+        </button>
+
+        <button type="button" class="channel-card" data-channel="trot" onclick="selectChannel('trot')">
+          <span class="channel-icon">🎺</span>
+          <strong class="channel-name">인기 트로트 & 흥겨운 가요</strong>
+          <span class="channel-desc">임영웅, 이찬원, 영탁, 나훈아, 김연자</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 탭 2: 상황·기분별 채널 (6가지) -->
+    <section id="panelMood" class="tab-panel" role="tabpanel" aria-labelledby="tabMoodBtn">
+      <h2 class="section-guide">👇 지금 어떤 시간을 보내고 계시나요? (6가지 무드)</h2>
+      <div class="channel-grid mood-grid">
+        <button type="button" class="channel-card mood-card" data-channel="drive" onclick="selectChannel('drive')">
+          <span class="channel-icon">🚗</span>
+          <strong class="channel-name">시원한 드라이브 · 여행 갈 때</strong>
+          <span class="channel-desc">창문 열고 달릴 때 기분 최고조로 올려주는 신나는 곡</span>
+        </button>
+
+        <button type="button" class="channel-card mood-card" data-channel="focus" onclick="selectChannel('focus')">
+          <span class="channel-icon">💻</span>
+          <strong class="channel-name">공부 · 과제 · 작업 집중할 때</strong>
+          <span class="channel-desc">집중력을 높여주는 편안한 연주곡과 로파이 비트</span>
+        </button>
+
+        <button type="button" class="channel-card mood-card" data-channel="workout" onclick="selectChannel('workout')">
+          <span class="channel-icon">👟</span>
+          <strong class="channel-name">산책 · 러닝 · 운동할 때</strong>
+          <span class="channel-desc">발걸음이 가벼워지는 경쾌하고 에너제틱한 리듬</span>
+        </button>
+
+        <button type="button" class="channel-card mood-card" data-channel="cafe" onclick="selectChannel('cafe')">
+          <span class="channel-icon">☕</span>
+          <strong class="channel-name">여유로운 오후 커피 타임</strong>
+          <span class="channel-desc">분위기 좋은 성수·연남동 카페에 온 듯한 감성 음악</span>
+        </button>
+
+        <button type="button" class="channel-card mood-card" data-channel="rain" onclick="selectChannel('rain')">
+          <span class="channel-icon">☔</span>
+          <strong class="channel-name">비 오는 날 창밖 보며</strong>
+          <span class="channel-desc">빗소리와 함께 들으면 더욱 감성적인 플레이리스트</span>
+        </button>
+
+        <button type="button" class="channel-card mood-card" data-channel="night" onclick="selectChannel('night')">
+          <span class="channel-icon">🌙</span>
+          <strong class="channel-name">잠들기 전 편안한 밤 · 새벽</strong>
+          <span class="channel-desc">하루의 피로를 풀어주는 잔잔하고 포근한 음악</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 탭 3: AI DJ에게 직접 신청곡 보내기 -->
+    <section id="panelRequest" class="tab-panel" role="tabpanel" aria-labelledby="tabRequestBtn">
+      <h2 class="section-guide">👇 듣고 싶은 가수, 곡명, 또는 분위기를 입력해 보세요!</h2>
+      <div class="dj-request-box">
+        <div class="quick-tags">
+          <span class="quick-label">인기 키워드:</span>
+          <button type="button" class="tag-chip" onclick="fillRequest('아이유 노래 추천해줘')">#아이유</button>
+          <button type="button" class="tag-chip" onclick="fillRequest('데이식스 밴드 명곡')">#데이식스</button>
+          <button type="button" class="tag-chip" onclick="fillRequest('뉴진스 신나는 노래')">#뉴진스</button>
+          <button type="button" class="tag-chip" onclick="fillRequest('지브리 히사이시 조 피아노')">#지브리피아노</button>
+          <button type="button" class="tag-chip" onclick="fillRequest('임영웅 인기곡 찾아줘')">#임영웅</button>
+          <button type="button" class="tag-chip" onclick="fillRequest('비 오는 날 카페 재즈')">#카페재즈</button>
+        </div>
+
+        <div class="input-row">
+          <input
+            type="text"
+            id="djInput"
+            class="dj-input"
+            placeholder="예: 아이유 노래 추천해줘, 데이식스 청량한 곡, 드라이브 팝송 찾아줘"
+            aria-label="신청곡 또는 가수 입력"
+            onkeydown="if(event.key==='Enter') submitDjRequest()"
+          />
+          <button type="button" class="voice-btn" id="voiceBtn" onclick="startVoiceInput()" title="목소리로 입력하기">
+            🎙️ 말하기
+          </button>
+        </div>
+
+        <button type="button" class="submit-request-btn" onclick="submitDjRequest()">
+          🎵 PlayMCP 멜론 DJ에게 맞춤 선곡 요청하기
+        </button>
+      </div>
+    </section>
+
+    <!-- 선곡 결과 전광판 (노래 카드 리스트 + 카카오톡 전송 영역) -->
+    <section id="resultSection" class="result-section" aria-live="polite">
+      <div class="dj-comment-box">
+        <div class="dj-avatar">🎧</div>
+        <div class="dj-bubble">
+          <div class="dj-name">PlayMCP 멜론 AI 뮤직 DJ</div>
+          <p id="djMessage" class="dj-text">
+            안녕하세요! 위에서 원하시는 음악 채널을 누르거나 가수를 검색하시면 맞춤 명곡을 골라 드립니다.
+          </p>
+        </div>
+        <button type="button" class="tts-btn" onclick="speakDjMessage()" title="DJ 안내 멘트 소리로 듣기">
+          🔊 설명 듣기
+        </button>
+      </div>
+
+      <!-- 추천 노래 카드들이 들어가는 자리 -->
+      <div id="songListContainer" class="song-list"></div>
+
+      <!-- 카카오톡으로 보내기 액션 버튼 영역 -->
+      <div id="kakaoActionBox" class="kakao-action-box hidden">
+        <h3 class="action-title">💛 마음에 드는 플레이리스트를 카카오톡으로 공유해 보세요!</h3>
+        <div class="kakao-btn-group">
+          <button type="button" class="kakao-btn memo-btn" onclick="sendToMyKakaoMemo()">
+            📥 내 카카오톡(나와의 채팅방)에 보관하기
+          </button>
+          <button type="button" class="kakao-btn share-btn" onclick="shareToKakaoFriend()">
+            💌 친구에게 카카오톡으로 노래 선물하기
+          </button>
+        </div>
+        <p class="action-help" id="kakaoActionNotice">
+          💡 버튼을 누르면 추천된 노래 목록과 <strong>멜론 바로 듣기 링크</strong>가 카카오톡으로 전송됩니다.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 하단 안내 푸터 -->
+  <footer class="radio-footer">
+    <p>본 웹앱은 <strong>Kakao Developers</strong>와 <strong>Kakao PlayMCP (mcp/3)</strong>를 활용하여 제작된 반응형 웹앱입니다.</p>
+  </footer>
+
+  <!-- 알림 토스트 창 -->
+  <div id="toastBox" class="toast-box hidden" role="status" aria-live="polite"></div>
+
+  <!-- 카카오톡 메시지 미리보기 & 전송 모달 -->
+  <div id="kakaoPreviewModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+    <div class="modal-card kakao-preview-card">
+      <div class="modal-header">
+        <h2 id="previewModalTitle">💬 카카오톡 전송 미리보기</h2>
+        <button type="button" class="close-btn" onclick="closePreviewModal()">✕ 닫기</button>
+      </div>
+      <div class="modal-body">
+        <div class="katalk-room-sim">
+          <div class="katalk-date-chip">오늘의 추천 플레이리스트</div>
+          <div class="katalk-msg-card">
+            <div class="katalk-card-banner">🎧 AI 뮤직 라운지 & 카톡 주크박스</div>
+            <div class="katalk-card-body" id="katalkPreviewContent"></div>
+            <div class="katalk-card-footer">
+              <span>Melon · PlayMCP 연동</span>
+            </div>
+          </div>
+        </div>
+        <div class="preview-actions">
+          <button type="button" class="copy-text-btn" onclick="copyPlaylistToClipboard()">
+            📋 카톡방에 붙여넣기용 글자 복사하기
+          </button>
+          <button type="button" class="real-kakao-btn" onclick="triggerRealKakaoSend()">
+            💛 실제 카카오톡 앱으로 보내기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 카카오 디벨로퍼스 & PlayMCP 연결 설정 모달 -->
+  <div id="configModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="configModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="configModalTitle">⚙️ 카카오 & PlayMCP 마법 열쇠 설정</h2>
+        <button type="button" class="close-btn" onclick="closeConfigModal()">✕ 닫기</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          ✅ <strong>카카오 JavaScript API 키</strong>가 기본 탑재되어 있습니다!
+        </p>
+
+        <div class="form-group">
+          <label for="kakaoJsKeyInput">1. 카카오 디벨로퍼스 JavaScript 키 (<code>developers.kakao.com</code>)</label>
+          <input
+            type="text"
+            id="kakaoJsKeyInput"
+            class="config-input"
+            value="8cfedd32f1478e4dc67d8b1ca3fe1aad"
+            placeholder="예: 8cfedd32f1478e4dc67d8b1ca3fe1aad"
+          />
+          <small class="form-help">카카오 디벨로퍼스 &gt; 내 애플리케이션 &gt; 앱 키의 'JavaScript 키'가 적용되어 있습니다.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="playMcpUrlInput">2. 카카오 PlayMCP 서버 주소 (<code>playmcp.kakao.com</code>)</label>
+          <input
+            type="url"
+            id="playMcpUrlInput"
+            class="config-input"
+            value="https://playmcp.kakao.com/mcp/3"
+          />
+          <small class="form-help">PlayMCP의 멜론/나와의 채팅방 도구함 원격 엔드포인트 주소입니다.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="playMcpTokenInput">3. PlayMCP 인증 토큰 (선택 사항)</label>
+          <input
+            type="password"
+            id="playMcpTokenInput"
+            class="config-input"
+            placeholder="PlayMCP 연동 토큰이 있다면 입력해 주세요"
+          />
+        </div>
+
+        <div class="modal-footer-btns">
+          <button type="button" class="save-config-btn" onclick="saveConfig()">💾 설정 저장하고 적용하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
